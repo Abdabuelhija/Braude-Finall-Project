@@ -1,0 +1,77 @@
+.condiv{
+width: 100%;
+height: 800px;
+background-size: cover;
+background-color: #F34C19;
+margin-top:-60px;
+}
+.contactF{
+        width: 50%; 
+        text-align: center;
+        margin: auto;
+        
+
+}
+.topnav {
+text-align: left;
+background-color: #E3E3E3;
+
+  }
+  .topnav a {
+    color: #0c0909;
+    text-align: center;
+    padding: 14px 30;
+    text-decoration: none;
+    font-size: 17px;
+  }
+  .topnav a:hover {
+    background-color: #E3E3E3;
+    color: black;
+  }
+  .head{
+    width: 100%;
+    height: 850px;
+    background-color: #E3E3E3;
+    margin-top:-50px;
+    padding-top: 10%;
+  }
+  .Hometitle{
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 60px;
+    text-align: center;
+    color: E3E3E3;
+    padding-top: 20%;
+  }
+  .Aboutustitle{
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 50px;
+    padding-left: 5%;
+  }
+  .aboutcontent{
+    text-align: left;
+    font-size: 30px;
+    font-weight: bold;
+    font-family: titillium;
+    padding-left: 5%;
+  }
+  .LoginBody{
+    background-color: #E3E3E3;
+    }
+    .Lform{
+      margin-top: 9%;
+      padding-top: 3%;
+      background-color: #d3d1d1;
+      border-radius: 1%;
+    }
+    .Pcover{
+      width: 100%;
+      height: 1000px;
+      background-image: url("../Imgs/Cover.jpg"); 
+      background-size: cover;
+      margin-top:-50px;
+  }
+  .SU{
+    text-decoration: none;
+  }
+
+
