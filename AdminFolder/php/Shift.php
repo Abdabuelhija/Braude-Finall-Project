@@ -170,17 +170,22 @@
       $Worker=$_POST['Workers'];
       $Date=$_POST['Date'];
       $Hours=$_POST['Hours'];
-      $sql = "INSERT INTO shift (Date,WorkerID,ShiftHours,HisTurn)
-      VALUES ('$Date','$Worker','$Hours','0')"; 
-      // if the worker doesn't exist in the shift in this date and if the date not saturday and if the hours shift <10 so do :{  
-      if ($conn->query($sql) === TRUE) {
-      echo "<script>alert('Worker inserted');</script>";
-      header("refresh:0");
-      } 
-      else {
-      echo '<center>','<h6 style="color:red">',"Error: " . $sql . "<br>" . $conn->error;
-      }
-    // }
+      $dayOfWeek = date('l', strtotime($Date));
+      $isExist=false;
+      if($dayOfWeek != 'Saturday' and $Hours<10 and isExist($Worker,$Date)==false) {
+        $sql = "INSERT INTO shift (Date,WorkerID,ShiftHours,HisTurn)
+        VALUES ('$Date','$Worker','$Hours','0')";
+        if ($conn->query($sql) === TRUE) {
+          echo "<script>alert('Worker inserted');</script>";
+          header("refresh:0");
+          } 
+          else {
+          echo '<center>','<h6 style="color:red">',"Error: " . $sql . "<br>" . $conn->error;
+          }  
+        }
+        else{
+          echo "<script>alert('not confirmed on saturday or shift hours >9 or the worker exist ');</script>";
+        }
     } 
     function showAddProductDiv(){
         echo"
@@ -191,4 +196,13 @@
         <style/>
         ";
       } 
+      function isExist($WorkerID, $Date) {
+        include "../../db_connection.php";
+        $sql = "SELECT * FROM shift WHERE WorkerID=$WorkerID and Date='$Date'";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+          return true;
+        }
+        return false;
+    }    
 ?>
