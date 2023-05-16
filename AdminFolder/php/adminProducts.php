@@ -1,6 +1,6 @@
 <?php
 ob_start();
-  include 'AdminNav.php';
+  include 'Navbar.php';
 session_start();
 ?>
 <html>

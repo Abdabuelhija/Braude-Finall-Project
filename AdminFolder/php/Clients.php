@@ -1,5 +1,5 @@
 <?php
-  include 'AdminNav.php';
+  include 'Navbar.php';
   echo "";
 ?>
 <html>
