@@ -11,14 +11,14 @@
             <a href="adminWorkers.php"><i class="fa fa-briefcase" aria-hidden="true"></i> Worker's</a> 
             <a href="Clients.php"><i class="fa fa-users" aria-hidden="true"></i> Customer's</a> 
             <a href="Shift.php"><i class="fa fa-users" aria-hidden="true"></i> Daily Shift</a> 
-            <span class="Logout" onclick="logout()"><i class="fa fa-sign-out" aria-hidden="true"></i></span>
+            <span class="Logout" onclick="logout()"><i class="fa fa-sign-out" aria-hidden="true"> Logout</i></span>
         </div>
     </body>
     <script>
     function logout() {
-    if (confirm("Are you sure you want to logout?")) {
-    window.location.assign('../../Login.php');
-    } 
+        if (confirm("Are you sure you want to logout?")) {
+            window.location.assign('../../Login.php');
+        } 
     }
 </script>
 </html>
