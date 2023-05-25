@@ -170,53 +170,5 @@
         return false;
     }
 
-
-// פונקציה לחיפוש בטבלת הבעיות על פי תיאור הבעיה
-function findProblem($description) {
-    include 'db_connection.php';
-    // חיפוש הבעיה בטבלת הבעיות על פי התיאור שהלקוח רשם
-    $sql = "SELECT * FROM problems WHERE description = '$description'";
-    $result = $conn->query($sql);
-    
-    // בדיקה אם נמצאה בעיה בטבלת הבעיות והחזרת הפתרון
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $solution = $row["solution"];
-        return $solution;
-    } else {
-        return "לא נמצאה בעיה תואמת";
-    }
-    
-    // סגירת החיבור לבסיס הנתונים
-    $conn->close();
-}
-
-// // דוגמה לשימוש בפונקציה
-// $problem_description = $_POST["subject"]; // תיאור הבעיה שהוזן על ידי המשתמש בטופס
-// $solution = findProblem($problem_description); // חיפוש הבעיה והחזרת הפתרון
-// echo "פתרון לבעיה: " . $solution;
-
-
-
-
-
-// 12/4/2023
-// function findProblem($description) {
-//     include 'db_connection.php';
-//     $sql = "SELECT * FROM problems WHERE description = '$description'";
-//     $result = $conn->query($sql);
-//     if ($result->num_rows > 0) {
-
-//         // $row = $result->fetch_assoc();
-//         // $ProductID = $row["ProductID"];
-//         // $sql = "INSERT INTO turnproblems (requestID	ProblemID)
-//         // VALUES ('','','','',' ','','','')";
-//     } else {
-
-//     }
-// }
-
-
-
 ?>
 
