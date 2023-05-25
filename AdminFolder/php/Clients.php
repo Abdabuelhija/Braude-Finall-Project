@@ -19,9 +19,6 @@
   body{
         background-color: #e3e1ff;
       }
-      .card{
-        box-shadow: 10px 15px lightblue;
-      }
     </style>
   <body>
     <br>

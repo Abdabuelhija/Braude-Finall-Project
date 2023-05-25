@@ -38,7 +38,7 @@ if (isset($_POST['Repasssubmit'])) {
       echo"<script>alert('password changed');</script>";
       $sql = "UPDATE customers SET isBlocked='No'";
       if ($conn->query($sql) === TRUE) {
-        header( "refresh:2;ClientHome.php" );
+        header( "refresh:2;Home.php" );
       }
     }
   }

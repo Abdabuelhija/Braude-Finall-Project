@@ -101,15 +101,6 @@ session_start();
               }
               $buttonID++;
               echo
-              "<form method='post'><input type='submit' name='$buttonID' value='update expected fix time:' style='width:150px;'></form>";
-              if (isset($_POST[$buttonID])) {
-                $_SESSION['ProducID']=$row['ID'];
-                echo "<script>
-                var myWindow = window.open('expectedFixTime.php','','width=700px,height=500px');
-                </script>";
-              }
-              $buttonID++;
-              echo
               "<form method='post'><input type='submit' name='$buttonID' value='Remove' style='background-color:red;width:150px;' ></form>";
               if (isset($_POST[$buttonID])){
                 $sql = "UPDATE products SET quantity='0'  WHERE ID='$id'";
@@ -189,7 +180,7 @@ session_start();
     VALUES ('$name','$price','$quantity','$matchedTo','$imgSrc','$expectedFixTime')";
     if ($conn->query($sql) === TRUE) {
         echo"<script>alert('product inserted');</script>";
-        header("Refresh:2;url=adminProducts.php");
+        header("Refresh:2;url=Products.php");
     }
     else {
       echo"<script>alert('error in inserted');</script> ";

@@ -1,5 +1,5 @@
 <?php
-  include 'clientNav.php';
+  include 'Navbar.php';
   session_start();
 ?>
 <html>
@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="../Style/ProfileStyle.css"/>
     <link rel="stylesheet" href="../../ExternalStyle/FormStyle.css"/> 
     <link rel="stylesheet" href="../../ExternalStyle/GeneralStyle.css"/>
-    <!-- <script type="text/javascript" src="../javascript/profile_Js_Func.js"></script> -->
     <title>Profile</title>
   </head>
 

@@ -1,6 +1,6 @@
 <?php
 ob_start();
-include 'WorkerNav.php';
+include 'Navbar.php';
 session_start();
 ?>
 <html>

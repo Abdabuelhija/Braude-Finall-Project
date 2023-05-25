@@ -1,5 +1,5 @@
 <?php
-    include 'ClientNav.php';
+    include 'Navbar.php';
     date_default_timezone_set("Israel");
     session_start();
 ?>
@@ -11,13 +11,12 @@
     </head>
     <body>
     <div class="Lform" style="margin-top: 70px;">
-  <center><h1>זימון תור לבדיקה</h1></center>
-  <form method="post" >
-    <input type="text" name="subject" placeholder="Type your problem">
-    <input type="submit" value="Submit" name="submit">
-  </form>
-</div>
-
+    <center><h1>Request</h1></center>
+    <form method="post" >
+        <input type="text" name="subject" placeholder="Type your problem">
+        <input type="submit" value="Submit" name="submit">
+    </form>
+    </div>
 
     </body>
 </html>

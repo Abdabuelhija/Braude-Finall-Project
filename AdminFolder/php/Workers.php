@@ -23,7 +23,6 @@ echo "";
         background-color: #e3e1ff;
     }
     .card{
-        box-shadow: 10px 15px lightblue;
         margin-bottom: 50px;
     }
     </style>

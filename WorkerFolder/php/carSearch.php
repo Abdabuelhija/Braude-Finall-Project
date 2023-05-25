@@ -1,5 +1,5 @@
 <?php
-include 'WorkerNav.php';
+include 'Navbar.php';
 ?>
 <html>
     <head>

@@ -53,7 +53,7 @@
       $sql = "UPDATE revenues SET allRevenue='$newRevenue' WHERE ID='0' ";
       if ($conn->query($sql) === TRUE) {
         echo "<script> alert('the price paid');</script>";
-        header("Refresh:1;url=ClientHome.php");
+        header("Refresh:1;url=Home.php");
       } else {
         echo "error in sql query";
       }

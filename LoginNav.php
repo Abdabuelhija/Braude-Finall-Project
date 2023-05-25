@@ -6,7 +6,6 @@
 </head>
 <body>
 <div class="topnav">
-<!-- <a href="Home.php"><i class="fa fa-home" aria-hidden="true"></i> Home</a> -->
 <a href="Login.php"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a> 
 </div>
 </body>

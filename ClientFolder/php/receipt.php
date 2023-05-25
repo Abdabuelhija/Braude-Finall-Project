@@ -1,5 +1,5 @@
 <?php
-  include 'clientNav.php';
+  include 'Navbar.php';
   session_start();
 ?>
 <html>
@@ -61,7 +61,7 @@
               $RequestID = $row ['RequestID'];
               $Search = mysqli_query($conn, "SELECT * FROM requests WHERE ID='$RequestID'");
               $row = mysqli_fetch_array($Search);
-              $time = $row['Time'];
+              $time = $row['startTime'];
               echo
                 "<b>date</b>", $time;
               echo

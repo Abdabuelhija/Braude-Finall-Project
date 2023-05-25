@@ -26,7 +26,7 @@
             header("location:ClientFolder/php/Repass.php");
           } 
           else {
-            header("location:ClientFolder/php/ClientHome.php");
+            header("location:ClientFolder/php/Home.php");
           }
         }
         else{
@@ -75,7 +75,7 @@
     if($_POST['loginID']==$row['ID']){
       if($_POST['loginPassword']==$row['password']){
         $_SESSION['count']=0;
-        header("location:AdminFolder/php/AdminHome.php");
+        header("location:AdminFolder/php/Home.php");
       }
       else{
         echo '<center>','<h6 style="color:red">',"Error password";
