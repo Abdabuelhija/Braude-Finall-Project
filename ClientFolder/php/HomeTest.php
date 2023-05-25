@@ -24,7 +24,8 @@
     if (isset($_POST['submit'])){
         if (isAlreadyHaveTurn() == false){
             $description = $_POST["subject"];
-            findProblem($description);
+            $ProblemID=findProblem($description);
+
         }
         else{
         echo "<script>alert('You already sent request');</script>";
@@ -47,8 +48,8 @@
 
 
     function findProblem($description) {
-        include 'db_connection.php';
-        
+        include '../../db_connection.php';
+                echo "<script>alert('good ');</script>";
     }
 
 

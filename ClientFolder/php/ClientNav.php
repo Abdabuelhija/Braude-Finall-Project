@@ -9,8 +9,8 @@
     </style>
     <body>
         <div class="topnav">
-            <a href="ClientHome.php"><i class="fa fa-home" aria-hidden="true"></i> Home</a> 
-            <a href="Test2.php"><i class="fa fa-home" aria-hidden="true"></i>Test2</a> 
+            <!-- <a href="ClientHome.php"><i class="fa fa-home" aria-hidden="true"></i> Home</a>  -->
+            <!-- <a href="Test2.php"><i class="fa fa-home" aria-hidden="true"></i>Test2</a>  -->
             <a href="HomeTest.php"><i class="fa fa-home" aria-hidden="true"></i>  HomeTest</a> 
             <a href="Profile.php"> <i class="fa fa-user" aria-hidden="true"></i> Profile</a> 
             <a href="contact.php"><i class="fa fa-compress" aria-hidden="true"></i> Contact us</a> 

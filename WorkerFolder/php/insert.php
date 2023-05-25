@@ -287,6 +287,7 @@ session_start();
       echo '<center>','<h6 style="color:red">',"Error: " . $sql . "<br>" . $conn->error;
     }
   }
+  
   if(isset($_POST['deleteProduct'])){
     $deleteQuantity=$_POST['deleteQuantity'];
     $deleteProductID=$_POST['Removing'];
