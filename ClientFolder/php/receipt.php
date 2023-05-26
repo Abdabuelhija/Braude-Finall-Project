@@ -61,9 +61,9 @@
               $RequestID = $row ['RequestID'];
               $Search = mysqli_query($conn, "SELECT * FROM requests WHERE ID='$RequestID'");
               $row = mysqli_fetch_array($Search);
-              $time = $row['startTime'];
+              $date = $row['date'];
               echo
-                "<b>date</b>", $time;
+                "<b>date</b>", $date;
               echo
                 "<b>Products : </b><br>
                       </div>";

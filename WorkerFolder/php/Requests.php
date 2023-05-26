@@ -60,7 +60,7 @@ session_start();
                     <div class='card-body'>
                         <b>request ID </b>",$row['ID'],
                         "<b>ClientID </b>",$row['clientID'],
-                        "<b>Time: </b>",$row['Time'],
+                        "<b>start Time: </b>",$row['startTime'],
                         "<b>status </b> ",$row['status'],
                         "
                 </div>

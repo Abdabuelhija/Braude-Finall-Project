@@ -69,7 +69,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="addSubmit" class="btn btn-primary" name="submit">Add Worker</button>
+        <button type="addSubmit" class="btn btn-primary" name="addSubmit">Add Worker</button>
       </div>
     </form>
   </div>
@@ -78,9 +78,6 @@
   </div>
 
   <script>
-
-
-
 $(document).ready(function() {
 
   $(document).ready(function() {

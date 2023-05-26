@@ -208,7 +208,8 @@ session_start();
       ";
     }
   }
-    else{//explain:if the product not exist in his request :insert the product
+    else{
+      //explain:if the product not exist in his request :insert the product
       $sql = "SELECT * FROM products WHERE ID='$ProductID'";
       $Search = mysqli_query($conn,$sql);
       while($row = mysqli_fetch_array($Search))
