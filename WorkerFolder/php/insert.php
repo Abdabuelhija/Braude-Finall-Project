@@ -94,7 +94,7 @@ session_start();
             ?>
           </select>
           <br>
-          <input type="text"  name="quantity"  placeholder="set quantity" required>
+          <input type="text"  name="quantity"  placeholder="set quantity" >
           <input type="submit" value="add product" name="addProduct">
           <input type="submit" value="finish the turn" name="closeturn" style="background-color:red">
           <input type="hidden" id="counterValue" name="counterValue" value="0">
@@ -304,40 +304,36 @@ setInterval(function(){
             echo "Error in sql query";
           }
       }
-      echo "
-      <script type='text/javascript'>alert('the turn closed');</script>
-      ";
+      echo "<script type='text/javascript'>alert('the turn closed');</script>";
+
+        $sql = "SELECT ProblemID FROM requests WHERE ID='$RequestID'";
+        $result = $conn->query($sql);
+        $row = $result->fetch_assoc();
+        $ProblemID=$row['ProblemID'];
+
+        $sql2= "SELECT * FROM turnproblems WHERE ProblemID='$ProblemID'";
+        $result2 = $conn->query($sql2);
+        // if the products for the problem not exist (new problem)
+        if ($result2->num_rows <=0) {
+            $sql3 = "SELECT *  FROM turnproducts WHERE RequestID = '$RequestID'";
+            $result3 = $conn->query($sql3);
+            $row3 = $result3->fetch_assoc();
+            $PID=$row3['ProductID'];
+            $QUANTITY=$row3['quantity'];
+            $sql4 = "INSERT INTO turnproblems (ProductID, ProblemID, quantity) 
+            VALUES ('$PID','$ProblemID','$QUANTITY' )";
+            if ($conn->query($sql4) === TRUE) {
+              echo "<script>alert('New record created successfully');</script>";
+            }
+             else  {
+                echo "Error: " . $insertSql . "<br>" . $conn->error;
+            }
+        }
+
       header("Refresh:0");
     } 
     else {
       echo '<center>','<h6 style="color:red">',"Error: " . $sql . "<br>" . $conn->error;
-    }
-
-    // check if the description exist in the problems 
-    $sql = "SELECT * FROM requests WHERE ID='$RequestID'";
-    $result = $conn->query($sql);
-    $row = $result->fetch_array();
-    $description=$row['description'];
-    $sql="SELECT * FROM problems WHERE description='$description'";
-    $result = $conn->query($sql);
-    $row = $result->fetch_assoc();
-    //if not exist insert the products to the turnProblems .
-    if ($result->num_rows <= 0) {
-      // Fetch data from 'turnproducts'
-      $sql = "SELECT ProductID, quantity FROM turnproducts WHERE RequestID = ?";
-      $stmt = $conn->prepare($sql);
-      $stmt->bind_param("s", $RequestID);  // assuming $RequestID is a string
-      $stmt->execute();
-      $result = $stmt->get_result();
-      while ($row = $result->fetch_assoc()) {
-      // For each row fetched, insert data into 'turnproblems'
-      $insertSql = "INSERT INTO turnproblems (ProductID, ProblemID, quantity) VALUES (?, ?, ?)";
-      $insertStmt = $conn->prepare($insertSql);
-      $insertStmt->bind_param("isi", $row['ProductID'], $ProblemID, $row['quantity']);  // assuming $ProblemID is a string
-      $insertStmt->execute();
-      }
-      $stmt->close();
-      $insertStmt->close();
     }
 
   }
