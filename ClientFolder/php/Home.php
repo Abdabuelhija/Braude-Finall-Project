@@ -50,54 +50,137 @@
     function findProblem($description) {
         include "../../db_connection.php";
         $carType = $_SESSION['carType'];
-        // // 1) First, check if the description already exists
-        // $sql = "SELECT ID FROM problems WHERE carType=? AND description=?";
-        // $stmt = $conn->prepare($sql);
-        // $stmt->bind_param("ss", $carType, $description);
-        // $stmt->execute();
-        // $result = $stmt->get_result();
-        // // If the description does not exist in the database, insert it
-        // if ($result->num_rows == 0) {
-        //     $sql = "INSERT INTO problems (description, carType) VALUES (?, ?)";
-        //     $stmt = $conn->prepare($sql);
-        //     $stmt->bind_param("ss", $description, $carType);
-        //     if (!$stmt->execute()) {
-        //         echo '<center><h6 style="color:red">Error: ' . $stmt->error;
-        //     }
-        // }
-        // //2) Search String in the DB that close to the customer description.
-        // $sql = "SELECT p.price, p.expectedFixTime FROM problems prob
-        //         INNER JOIN turnProblems tp ON prob.ID = tp.ProblemID
-        //         INNER JOIN products p ON tp.ProductID = p.ID
-        //         WHERE MATCH(prob.description) AGAINST(? IN NATURAL LANGUAGE MODE) and carType ='$carType'";
-        // $stmt = $conn->prepare($sql);
-        // if ($stmt === false) {
-        //     die("Error preparing statement: " . $conn->error);
-        // }
-        // $stmt->bind_param("s", $description);
-        // if (!$stmt->execute()) {
-        //     die("Error executing statement: " . $stmt->error);
-        // }
-        // $result = $stmt->get_result();
-        $TotaPrice=0;
-        $TotalProcessTime=0;
+        
+        // Check if the description is too short or doesn't have enough words
+        if (strlen($description) < 10 || str_word_count($description) < 3) {
+            echo '<center><h6 style="color:red">Error: Please provide a more detailed description.</h6></center>';
+            return; // Exit the function early
+        }
+    
+        // Check if the description already exists in the database
+        $sql = "SELECT p.price, p.expectedFixTime FROM problems prob
+            INNER JOIN turnProblems tp ON prob.ID = tp.ProblemID
+            INNER JOIN products p ON tp.ProductID = p.ID
+            WHERE prob.description = ? AND prob.carType = ?";
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            die("Error preparing statement: " . $conn->error);
+        }
+        $stmt->bind_param("ss", $description, $carType);
+        if (!$stmt->execute()) {
+            die("Error executing statement: " . $stmt->error);
+        }
+        $result = $stmt->get_result();
+    
+        if ($result->num_rows > 0) {
+            // Problem exists in the database, show the details
+            $TotaPrice = 0;
+            $TotalProcessTime = 0;
+            while ($row = $result->fetch_assoc()) {
+                $TotaPrice += $row['price'];
+                $TotalProcessTime += $row['expectedFixTime'];
+            }
+            if ($TotaPrice <= 0 || $TotalProcessTime <= 0) {
+                echo "<br>The price of your problem and the expected fix time is unknown.";
+            } else {
+                echo "The price of your problem is a maximum of $TotaPrice shekels <br> and the expected fix time is about $TotalProcessTime minutes.";
+            }
+            return; // Exit the function
+        }
+    
+        // Check if there is a similar description in the database
+        $sql = "SELECT ID, description FROM problems WHERE carType = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $carType);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $similarId = null;
+        $maxSimilarity = 0.0;
+        $suggestedDescription = "";
+    
         while ($row = $result->fetch_assoc()) {
-            $TotaPrice+=$row['price'] ;
-            $TotalProcessTime+=$row['expectedFixTime'] ;
+            similar_text($description, $row['description'], $percent);
+            if ($percent > $maxSimilarity) {
+                $maxSimilarity = $percent;
+                $suggestedDescription = $row['description'];
+                $similarId = $row['ID'];
+            }
         }
-        if( $TotaPrice<=0|| $TotalProcessTime<=0){
-            echo"<br>the price of your problem  and the expected fix time is unknown ";
+    
+        if ($maxSimilarity > 80.0 && $suggestedDescription !== $description) {
+            // Show the details for the similar description
+            echo "<center><h6 style='color:orange'>Did you mean: '" . $suggestedDescription . "'?</h6></center>";
+            $sql = "SELECT p.price, p.expectedFixTime FROM problems prob
+                INNER JOIN turnProblems tp ON prob.ID = tp.ProblemID
+                INNER JOIN products p ON tp.ProductID = p.ID
+                WHERE prob.ID = ? AND prob.carType = ?";
+            $stmt = $conn->prepare($sql);
+            if ($stmt === false) {
+                die("Error preparing statement: " . $conn->error);
+            }
+            $stmt->bind_param("ss", $similarId, $carType);
+            if (!$stmt->execute()) {
+                die("Error executing statement: " . $stmt->error);
+            }
+            $result = $stmt->get_result();
+    
+            $TotaPrice = 0;
+            $TotalProcessTime = 0;
+            while ($row = $result->fetch_assoc()) {
+                $TotaPrice += $row['price'];
+                $TotalProcessTime += $row['expectedFixTime'];
+            }
+            if ($TotaPrice <= 0 || $TotalProcessTime <= 0) {
+                echo "<br>The price of your problem and the expected fix time is unknown.";
+            } else {
+                echo "The price of your problem is a maximum of $TotaPrice shekels <br> and the expected fix time is about $TotalProcessTime minutes.";
+            }
+            return; // Exit the function
         }
-        else{
-            echo"the price of your problem is maximum $TotaPrice  shekels <br> and the expected fix time is about $TotalProcessTime minuts";
+    
+        // Insert the new problem into the database
+        $sql = "INSERT INTO problems (description, carType) VALUES (?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ss", $description, $carType);
+        if (!$stmt->execute()) {
+            echo '<center><h6 style="color:red">Error: ' . $stmt->error . '</h6></center>';
         }
-        findWorker ($TotalProcessTime);
-    }
+    
+        // Show the details for the new problem
+        $sql = "SELECT p.price, p.expectedFixTime, tp.quantity FROM problems prob
+        INNER JOIN turnProblems tp ON prob.ID = tp.ProblemID
+        INNER JOIN products p ON tp.ProductID = p.ID
+        WHERE prob.description = ? AND prob.carType = ?";
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            die("Error preparing statement: " . $conn->error);
+        }
+        $stmt->bind_param("ss", $description, $carType);
+        if (!$stmt->execute()) {
+            die("Error executing statement: " . $stmt->error);
+        }
+        $result = $stmt->get_result();
+    
+        $TotaPrice = 0;
+        $TotalProcessTime = 0;
+        while ($row = $result->fetch_assoc()) {
+            $TotaPrice = ($TotaPrice +$row['price'])*$row['quantity'];
+            $TotalProcessTime =  ($TotalProcessTime +$row['expectedFixTime'])*$row['quantity'];
+        }
+        if ($TotaPrice <= 0 || $TotalProcessTime <= 0) {
+            echo "<br>The price of your problem and the expected fix time is unknown.";
+        } else {
+            echo "The price of your problem is a maximum of $TotaPrice shekels <br> and the expected fix time is about $TotalProcessTime minutes.";
+        }
+         findWorker ($TotalProcessTime);
+}
 
 
 function findWorker($TotalProcessTime) {
     include "../../db_connection.php";
     $carType = $_SESSION['carType'];
+    $description = $_POST["subject"];
     $CID = $_SESSION['id'];
     $sql = "SELECT s.WorkerID FROM shift s JOIN workers w ON s.WorkerID = w.ID WHERE s.Histurn = 0 AND s.Date = CURDATE() AND w.competence = '$carType' LIMIT 1";
     $result = $conn->query($sql);
@@ -117,8 +200,8 @@ function findWorker($TotalProcessTime) {
             $newFinishTimeFormatted = date("H:i:s", $newFinishTime);
             $newstartTimeFormatted = date("H:i:s", $newstartTime); 
             echo"<br>the worker will prosecing in your request at $newstartTimeFormatted and finish at $newstartTimeFormatted";
-            $sql3 = "INSERT INTO requests (clientID, workerID, status, Date, finishTime, startTime) 
-            VALUES ('$CID', '$workerID', 'Processing', CURDATE(), '$newFinishTimeFormatted', '$newstartTimeFormatted')";
+            $sql3 = "INSERT INTO requests (clientID, workerID, status,description,Date, finishTime, startTime) 
+            VALUES ('$CID', '$workerID', 'Processing','$description', CURDATE(), '$newFinishTimeFormatted', '$newstartTimeFormatted')";
             $conn->query($sql3);
             $sql4 = "UPDATE shift SET Histurn = 1 WHERE WorkerID = '$workerID' AND Date = CURDATE()";
             $conn->query($sql4);

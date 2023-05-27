@@ -20,6 +20,10 @@ session_start();
     column-gap: 20px;
     margin-left: 30px;
     }
+         .Grid2{
+    display: grid;
+    grid-template-columns:auto auto; 
+    }
     .card-body{
         display: grid;
         grid-template-columns: auto auto  ;
@@ -29,8 +33,6 @@ session_start();
         text-align: center;
         border-radius: 10px;
         width: 18rem;
-        /* background-color: lightblue; */
-        box-shadow: 10px 10px lightblue;
       }
       .Lform{
         padding-top:50px;
@@ -39,6 +41,7 @@ session_start();
 
     </style>
     <?php 
+
       include "../../db_connection.php";
       $RequestID =$_SESSION['RID'];
       echo"<center><h1>request number $RequestID </h1></center>";
@@ -56,8 +59,11 @@ session_start();
         echo"<center>The Request Is Finished ,The Request History :<hr></center>";
       }
     ?>
+    
+    <div class="Grid2">
     <div class="Lform" >
       <h2> insert Product to the client </h2>
+      <span>the time of Processing the product <b id="counter">0</b> seconds</span>
       <br>
         <form method="post">
           <select name="AddP" required>
@@ -88,9 +94,10 @@ session_start();
             ?>
           </select>
           <br>
-          <input type="text"  name="quantity"  placeholder="set quantity">
+          <input type="text"  name="quantity"  placeholder="set quantity" required>
           <input type="submit" value="add product" name="addProduct">
           <input type="submit" value="finish the turn" name="closeturn" style="background-color:red">
+          <input type="hidden" id="counterValue" name="counterValue" value="0">
         </form>
     </div>
     
@@ -106,7 +113,7 @@ session_start();
                 echo"
                 <option value=$deleteProductID>
                   Product ID :",$row['ProductID'],"
-                  product name :",$row['productName'],"
+                  product name :",$row['name'],"
                   quantity :",$row['quantity'],"
                 </option>";
             }
@@ -117,7 +124,7 @@ session_start();
         <input type="submit" value="delete Product" name="deleteProduct" style="background-color:red">
       </form>
     </div>
-
+     </div >
     <div class="Grid">
     <?php
       include "../../db_connection.php";
@@ -153,16 +160,34 @@ session_start();
     }
     ?>
     </div>
+<script>
+let counter = 0;
+setInterval(function(){
+    counter++;
+    document.getElementById("counter").innerHTML = counter;
+    document.getElementById("counterValue").value = counter;
+}, 1000);
+</script>
   </body>
 </html>
-
 <?php
+
   $RequestID =$_SESSION['RID'];
   include "../../db_connection.php";
   if (isset($_POST['addProduct'])) {
   $ProductID = $_POST['AddP'];
   $quantity = $_POST['quantity'];
-  
+  $counterValue = $_POST['counterValue'];
+
+  $sql="UPDATE products SET avgCount = avgCount + 1 WHERE ID = '$ProductID'";
+  $conn->query($sql);
+  $Search = mysqli_query($conn,"SELECT * FROM products WHERE ID = '$ProductID'");
+  $row = mysqli_fetch_array($Search);
+
+  $newexpectedFixTime= (($counterValue+$row['expectedFixTime'])/$row['avgCount'])/$quantity;
+  $sql="update products set expectedFixTime='$newexpectedFixTime' WHERE ID = '$ProductID'";
+  $conn->query($sql);
+
   if(!(is_numeric($quantity))){
     echo "<script>alert('you should type quantity');</script>";
     return;
@@ -225,8 +250,8 @@ session_start();
       {
         $productName=$row['name'];
       }
-      $sql = "INSERT INTO turnproducts (RequestID,ProductID,productName,quantity)
-      VALUES ('$RequestID','$ProductID','$productName','$quantity')";
+      $sql = "INSERT INTO turnproducts (RequestID,ProductID,quantity)
+      VALUES ('$RequestID','$ProductID','$quantity')";
         $conn->query($sql);
         
         $sql ="UPDATE products SET quantity='$newquantity' WHERE ID='$ProductID' ";
@@ -287,6 +312,34 @@ session_start();
     else {
       echo '<center>','<h6 style="color:red">',"Error: " . $sql . "<br>" . $conn->error;
     }
+
+    // check if the description exist in the problems 
+    $sql = "SELECT * FROM requests WHERE ID='$RequestID'";
+    $result = $conn->query($sql);
+    $row = $result->fetch_array();
+    $description=$row['description'];
+    $sql="SELECT * FROM problems WHERE description='$description'";
+    $result = $conn->query($sql);
+    $row = $result->fetch_assoc();
+    //if not exist insert the products to the turnProblems .
+    if ($result->num_rows <= 0) {
+      // Fetch data from 'turnproducts'
+      $sql = "SELECT ProductID, quantity FROM turnproducts WHERE RequestID = ?";
+      $stmt = $conn->prepare($sql);
+      $stmt->bind_param("s", $RequestID);  // assuming $RequestID is a string
+      $stmt->execute();
+      $result = $stmt->get_result();
+      while ($row = $result->fetch_assoc()) {
+      // For each row fetched, insert data into 'turnproblems'
+      $insertSql = "INSERT INTO turnproblems (ProductID, ProblemID, quantity) VALUES (?, ?, ?)";
+      $insertStmt = $conn->prepare($insertSql);
+      $insertStmt->bind_param("isi", $row['ProductID'], $ProblemID, $row['quantity']);  // assuming $ProblemID is a string
+      $insertStmt->execute();
+      }
+      $stmt->close();
+      $insertStmt->close();
+    }
+
   }
   
   if(isset($_POST['deleteProduct'])){
