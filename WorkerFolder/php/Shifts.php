@@ -4,35 +4,13 @@ include 'Navbar.php';
 session_start();
 ?>
 <html>
+
 <head>
   <link rel="stylesheet" href="style/ShiftStyle.css">
-  <style>
-    .current-week {
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-    }
-    @keyframes pulsate {
-      0% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.2);
-      }
-      100% {
-        transform: scale(1);
-      }
-    }
-  </style>
   <title>Abeds Garage-Shift</title>
 </head>
 <body>
-  <div class="Buttons">
-    <form method="post">
-      <input type="submit" name="previous_week" value="Past Week">
-      <input type="submit" name="next_week" value="Next Week">
-    </form>
-  </div>
+  <br/><br/><br/><br/>
   <table>
     <tr>
       <?php
@@ -59,7 +37,7 @@ session_start();
     $currentWeekStart = date('Y-m-d', strtotime('sunday this week') + $weekOffsetDays * 86400);
     $currentWeekEnd = date('Y-m-d', strtotime('sunday this week') + ($weekOffsetDays + 6) * 86400);
 
-    echo "<p class='current-week'>Current Week: $currentWeekStart to $currentWeekEnd</p>";
+    echo "<p class='current-week'> $currentWeekStart to $currentWeekEnd</p>";
 
     $sql = "SELECT * FROM shift WHERE WorkerID='$WID' AND DATE(Date) BETWEEN DATE_ADD(CURDATE(), INTERVAL $weekOffsetDays DAY) AND DATE_ADD(CURDATE(), INTERVAL $weekOffsetDays + 6 DAY)";
     $result = $conn->query($sql);
@@ -86,7 +64,14 @@ session_start();
     echo "</tr>";
     ?>
   </table>
+  <div class="Buttons">
+    <form method="post">
+    <input type="submit" name="previous_week" value="Past week">
+      <input type="submit" name="next_week" value="Next week">
+    </form>
+  </div>
 </body>
+
 </html>
-<?php    
+<?php
 ?>

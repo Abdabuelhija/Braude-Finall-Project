@@ -1,50 +1,43 @@
 <?php
-  include 'Navbar.php';
-  session_start();
+include 'Navbar.php';
+session_start();
 ?>
 <html>
-  <head>
-  <link rel="stylesheet" href="../../ExternalStyle/GeneralStyle.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-  </head>
-<style>
-  body{
-        background-color: #e3e1ff;
-      }
+<head>
+  <link rel="stylesheet" href="../style/AdminStyle.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
 
-</style>
-  <body>
+<body>
   <table class="table table-hover">
-    <thead >
+    <thead>
       <tr>
         <th scope="col">Email</th>
         <th scope="col">Message</th>
       </tr>
     </thead>
     <tbody>
-    <?php
+      <?php
       include "../../db_connection.php";
       $sql = "SELECT * FROM messages ORDER BY ID DESC";
       $result = $conn->query($sql);
       if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
           $subject = $row['subject'];
           $email = $row['email'];
-            echo "
+          echo "
             <tr>
             <td>$email</td>
             <td>$subject</td>
             </tr>
             ";
         }
-      }   
-    ?>
-      </tbody>
-    </table>
-  </body>
+      }
+      ?>
+    </tbody>
+  </table>
+</body>
+
 </html>
-
-
-
-

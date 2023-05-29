@@ -1,77 +1,193 @@
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+:root {
+  --head-background-color: #E3E3E3;
+  --head-height: 850px;
+  --title-font-family: Verdana, Geneva, Tahoma, sans-serif;
+  --title-font-size: 60px;
+  --content-font-size: 30px;
+  --content-font-family: titillium;
+  --form-background-color: #d3d1d1;
+  --submit-color: #5C6BC0;
+  --primary-gradient: linear-gradient(135deg, #F34C19 0%, #0B8793 100%);
+  --hover-gradient: linear-gradient(135deg, #0B8793 0%, #F34C19 100%);
+  --form-box-shadow: 0px 14px 28px rgba(0, 0, 0, 0.25), 0px 10px 10px rgba(0, 0, 0, 0.22);
+  --input-border: 2px solid #ddd;
+  --input-focus-border: 2px solid #F34C19;
+  --input-transition: all 0.3s ease-in-out;
+  --input-padding: 12px 20px;
+  --input-border-radius: 4px;
+}
+
+#logo {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  max-width: 100px;
+  height: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-right: 20px;
+}
+
 .condiv{
-width: 100%;
-height: 800px;
-background-size: cover;
-background-color: #F34C19;
-margin-top:-60px;
+  width: 100%;
+  height: 800px;
+  background: var(--primary-gradient);
+  margin-top:-60px;
+  transition: background-color 0.3s ease;
 }
+
 .contactF{
-        width: 50%; 
-        text-align: center;
-        margin: auto;
-        
-
+  width: 50%; 
+  text-align: center;
+  margin: auto;
 }
+
 .topnav {
-text-align: left;
-background-color: #E3E3E3;
+  text-align: left;
+  background-color: var(--head-background-color);
+  transition: background-color 0.3s ease;
+}
 
-  }
-  .topnav a {
-    color: #0c0909;
-    text-align: center;
-    padding: 14px 30;
-    text-decoration: none;
-    font-size: 17px;
-  }
-  .topnav a:hover {
-    background-color: #E3E3E3;
-    color: black;
-  }
-  .head{
-    width: 100%;
-    height: 850px;
-    background-color: #E3E3E3;
-    margin-top:-50px;
-    padding-top: 10%;
-  }
-  .Hometitle{
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 60px;
-    text-align: center;
-    color: E3E3E3;
-    padding-top: 20%;
-  }
-  .Aboutustitle{
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 50px;
-    padding-left: 5%;
-  }
-  .aboutcontent{
-    text-align: left;
-    font-size: 30px;
-    font-weight: bold;
-    font-family: titillium;
-    padding-left: 5%;
-  }
-  .LoginBody{
-    background-color: #E3E3E3;
-    }
-    .Lform{
-      margin-top: 9%;
-      padding-top: 3%;
-      background-color: #d3d1d1;
-      border-radius: 1%;
-    }
-    .Pcover{
-      width: 100%;
-      height: 1000px;
-      background-image: url("../Imgs/Cover.jpg"); 
-      background-size: cover;
-      margin-top:-50px;
-  }
-  .SU{
-    text-decoration: none;
-  }
+.topnav a {
+  color: #0c0909;
+  text-align: center;
+  padding: 14px 30;
+  text-decoration: none;
+  font-size: 17px;
+  transition: color, background-color 0.3s ease;
+}
 
+.topnav a:hover {
+  background-color: var(--head-background-color);
+  color: black;
+}
 
+.head{
+  width: 100%;
+  height: var(--head-height);
+  background-color: var(--head-background-color);
+  margin-top:-50px;
+  padding-top: 10%;
+  transition: background-color 0.3s ease;
+}
+
+.Hometitle{
+  font-family: var(--title-font-family);
+  font-size: var(--title-font-size);
+  text-align: center;
+  color: var(--head-background-color);
+  padding-top: 20%;
+}
+
+.Aboutustitle{
+  font-family: var(--title-font-family);
+  font-size: 50px;
+  padding-left: 5%;
+}
+
+.aboutcontent{
+  text-align: left;
+  font-size: var(--content-font-size);
+  font-weight: bold;
+  font-family: var(--content-font-family);
+  padding-left: 5%;
+}
+
+.LoginBody{
+  background-color: var(--head-background-color);
+}
+
+.Lform {
+  margin-top: 9%;
+  padding-top: 3%;
+  background-color: var(--form-background-color);
+  border-radius: 1%;
+  box-shadow: var(--form-box-shadow);
+  transition: box-shadow 0.3s ease;
+  animation: fade-in 2s;
+}
+
+.Lform:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.Lform input[type="text"], .Lform input[type="password"] {
+  width: 100%;
+  border: var(--input-border);
+  border-radius: var(--input-border-radius);
+  padding: var(--input-padding);
+  transition: var(--input-transition), box-shadow 0.3s ease;
+}
+
+.Lform input[type="text"]:focus, .Lform input[type="password"]:focus {
+  border: var(--input-focus-border);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  outline: none;
+}
+
+.Lform input[type="submit"] {
+  background: var(--primary-gradient);
+  border: none;
+  color: white;
+  text-transform: uppercase;
+  transition: background 0.5s ease;
+}
+
+.Lform input[type="submit"]:hover {
+  background: var(--hover-gradient);
+  cursor: pointer;
+}
+.Lform:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.Pcover{
+  width: 100%;
+  height: 1000px;
+  background-image: url("../Imgs/Cover.jpg"); 
+  background-size: cover;
+  margin-top:-50px;
+}
+
+.SU{
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.SU:hover {
+  color: var(--submit-color);
+}
+
+/* Adding animation and effects for input elements */
+.Lform input[type="text"],
+.Lform input[type="password"] {
+  width: 100%;
+  border: var(--input-border);
+  border-radius: var(--input-border-radius);
+  padding: var(--input-padding);
+  transition: var(--input-transition);
+}
+
+.Lform input[type="text"]:focus,
+.Lform input[type="password"]:focus {
+  border: var(--input-focus-border);
+  outline: none;
+}
+
+/* Adding a gradient background to submit button */
+.Lform input[type="submit"] {
+  background: var(--primary-gradient);
+  border: none;
+  color: white;
+  text-transform: uppercase;
+  transition: background 0.5s ease;
+}
+
+.Lform input[type="submit"]:hover {
+  background: var(--hover-gradient);
+  cursor: pointer;
+}

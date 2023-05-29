@@ -2,12 +2,12 @@
     overflow: hidden;
     text-align: center;
     padding: 20px ;
-    background-color: #322e2f;
+    background-color: #F34C19;
     border-radius: 5px;
     margin: auto;
     }
   .topnav a {
-    color: #d1c8c8;
+    color: #ffffff;
     text-align: center;
     padding: 14px 30;
     text-decoration: none;
@@ -15,6 +15,7 @@
   }
   .topnav a:hover {
     color: rgb(255, 255, 255);
+    text-decoration: none;
   }
   .Logo{
   border-radius: 90%;

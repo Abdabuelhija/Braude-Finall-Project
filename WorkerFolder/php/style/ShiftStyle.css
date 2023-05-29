@@ -1,24 +1,112 @@
-table {
-  border-collapse: collapse;
-  width:80%;
-  margin: auto;
+:root {
+  --table-header-background-color: #f8f8f8;
+  --table-header-color: #666;
+  --table-border-color: #ddd;
+  --table-even-row-background-color: #f8f8f8;
+  --table-hover-row-background-color: #eee;
+  --table-cell-color: #666;
+  --link-color: #3498db;
+  --button-background-color: #0B8793;
+  --button-color: #fff;
+  --button-hover-background-color: #F34C19;
 }
 
-th, td {
-  padding: 8px;
+.Buttons {
   text-align: center;
-  border-bottom: 1px solid #ddd;
+  margin: auto;
+  margin-top: 20px;
+}
+
+.Buttons input[type="submit"] {
+  background-color: var(--button-background-color);
+  color: var(--button-color);
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.Buttons input[type="submit"]:hover {
+  background-color: var(--button-hover-background-color);
+}
+
+.current-week {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: var(--table-header-color);
+}
+
+table {
+  border-collapse: collapse;
+  width: 80%;
+  margin: auto;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+th,
+td {
+  padding: 15px;
+  text-align: center;
+  border-bottom: 1px solid var(--table-border-color);
+  color: var(--table-cell-color);
+  vertical-align: middle;
 }
 
 th {
-  background-color: #f2f2f2;
+  background-color: var(--table-header-background-color);
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: var(--table-even-row-background-color);
 }
 
 tr:hover {
-  background-color: #f5f5f5;
+  background-color: var(--table-hover-row-background-color);
 }
-.Buttons{
+
+td:first-child {
+  font-weight: bold;
+}
+
+td a {
+  color: var(--link-color);
+}
+.current-week {
   text-align: center;
-  margin: auto;
-  margin-top: 10px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+@keyframes pulsate {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+body{
+  background-color:#E3E3E3;
+  /* background-color: #f3f3f3; */
+}
+span {
+  content: "\203A";
 }

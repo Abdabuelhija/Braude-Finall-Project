@@ -12,13 +12,14 @@
     display: grid;
     grid-template-columns: auto auto ;
   }
-  .Grid{
+  .CardGrid{
     display: grid;
-    grid-template-columns:290px 290px 290px 290px; 
-    column-gap: 40px;
-    margin-left: 30px;
-    margin-top: 20px;
-    }
+    grid-template-columns: repeat(auto-fit, minmax(290px,50px));
+    row-gap:2px;
+    margin-left:80px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
     .Printbutton{
     background-color:rgb(35, 141, 247);
     color: white;
@@ -43,7 +44,9 @@
         background-color: #c5c4da;
         border-radius: 10px;
         width: 18rem;
-        /* background-color: #dcdbe0; */
       }
+body{
+  background-color:#E3E3E3;
+}
 
 
