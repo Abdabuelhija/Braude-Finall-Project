@@ -64,6 +64,7 @@
 .topnav a:hover {
   background-color: var(--head-background-color);
   color: black;
+  text-decoration: none;
 }
 
 .head{

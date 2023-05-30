@@ -58,9 +58,43 @@ a.right {
   top: 10px;
   left: 10px;
 }
+.topnav2 a{
+  color: #333;
+  font-size: 18px;
+  text-decoration: none;
+
+
+  top: 10px;
+  left: 10px;
+}
 
 .topnav2:hover {
   color: #F4A261;
   transition: color 0.3s ease;
   text-decoration: none;
+}
+.topnav3 {
+   
+    display: flex;
+    justify-content: center; /* updated this line */
+    align-items: center;
+    padding: 20px;
+    background-color: #F34C19;
+    text-decoration: none;
+  
+}
+.topnav3 a {
+  color: #fff;
+  text-align: center;
+  padding: 0 20px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.topnav3 a:hover {
+  color: #000000;
+  text-decoration: none;
+
 }

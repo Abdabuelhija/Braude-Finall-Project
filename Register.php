@@ -55,7 +55,7 @@ if (isset($_POST['submitRegister'])) {
   $img=$_POST['img'];
   $cars = $_POST['cars'];
 
-  $sql = "INSERT INTO customers (id,carID,pass,firstname,lastname,PhoneNumber,email,carType,'img')
+  $sql = "INSERT INTO customers (id,carID,pass,firstname,lastname,PhoneNumber,email,carType,img)
 VALUES ('$registerID','$registercarID','$registerPassword','$registerFirstName',' $registerLastname','$phonenumber','$registerEmail','$cars','$img')";
 
   if (ifAccountExistRegister() == false) {
@@ -63,7 +63,7 @@ VALUES ('$registerID','$registercarID','$registerPassword','$registerFirstName',
       if ($conn->query($sql) === TRUE) {
         echo "
     <script type='text/javascript'>alert('New account created successfully'); 
-    window.location.assign('Home.php');</script>
+    window.location.assign('./index.php');</script>
     ";
       } else {
         echo '<center>', '<h6 style="color:red">', "Error: " . $sql . "<br>" . $conn->error;

@@ -28,7 +28,7 @@ echo "";
         $img=$row['img'];
         echo "
             <div class='card' style='width: 18rem;'>
-              <img class='card-img-top' src=$img >
+              <img class='card-img-top' src=$img style='height:300px' >
                 <div class='card-body'>
                 <h5 class='card-title'>$firstname $lastname</h5>
                 ID :", $row['ID'], "<br>

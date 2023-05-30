@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-    <div class="topnav">
+    <div class="topnav3">
         <a href="Home.php"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
         <a href="messages.php"><i class="fa fa-comments-o" aria-hidden="true"></i> Message's</a>
         <a href="Products.php"><i class="fa fa-car" aria-hidden="true"></i> Product's</a>
@@ -18,7 +18,7 @@
 <script>
     function logout() {
         if (confirm("Are you sure you want to logout?")) {
-            window.location.assign('../../Login.php');
+            window.location.assign('../../index.php');
         }
     }
 </script>

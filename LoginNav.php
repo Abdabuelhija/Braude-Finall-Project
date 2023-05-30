@@ -8,7 +8,7 @@
 
 <body>
     <div class="topnav2">
-        <a href="Login.php"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
+        <a href="index.php"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
     </div>
 </body>
 </html>

@@ -22,7 +22,7 @@
 <script>
     function logout() {
         if (confirm("Are you sure you want to logout?")) {
-            window.location.assign('../../Login.php');
+            window.location.assign('../../index.php');
         }
     }
 </script>
