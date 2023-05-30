@@ -20,6 +20,7 @@ include 'LoginNav.php';
       <input type="password" name="registerRePassword" placeholder="Type your Password" minlength="4" required>
       <input type="text" name="phonenumber" placeholder="Type your phone number" required>
       <input type="text" name="registercarID" placeholder="Type your car ID" required>
+      <input type="text" name="img" placeholder="img url" required>
       <label for="cars">car type</label>
       <select name="cars" id="cars" required>
         <option value="mercedes" name="mercedes">Mercedes</option>
@@ -51,10 +52,11 @@ if (isset($_POST['submitRegister'])) {
   $registerPassword = $_POST['registerPassword'];
   $registerRePassword = $_POST['registerRePassword'];
   $phonenumber = $_POST['phonenumber'];
+  $img=$_POST['img'];
   $cars = $_POST['cars'];
 
-  $sql = "INSERT INTO customers (id,carID,pass,firstname,lastname,PhoneNumber,email,carType)
-VALUES ('$registerID','$registercarID','$registerPassword','$registerFirstName',' $registerLastname','$phonenumber','$registerEmail','$cars')";
+  $sql = "INSERT INTO customers (id,carID,pass,firstname,lastname,PhoneNumber,email,carType,'img')
+VALUES ('$registerID','$registercarID','$registerPassword','$registerFirstName',' $registerLastname','$phonenumber','$registerEmail','$cars','$img')";
 
   if (ifAccountExistRegister() == false) {
     if ($registerPassword == $registerRePassword) {
@@ -81,7 +83,7 @@ function ifAccountExistRegister()
   $Search = mysqli_query($conn, "SELECT * FROM customers");
   while ($row = mysqli_fetch_array($Search)) {
 
-    if ($_POST['registerID'] == $row['id']) {
+    if ($_POST['registerID'] == $row['ID']) {
       return true;
     }
     if ($_POST['registercarID'] == $row['carID']) {
@@ -91,14 +93,14 @@ function ifAccountExistRegister()
 
   $Search = mysqli_query($conn, "SELECT * FROM workers");
   while ($row = mysqli_fetch_array($Search)) {
-    if ($_POST['registerID'] == $row['workerID']) {
+    if ($_POST['registerID'] == $row['ID']) {
       return true;
     }
   }
 
   $Search = mysqli_query($conn, "SELECT * FROM admins");
   while ($row = mysqli_fetch_array($Search)) {
-    if ($_POST['registerID'] == $row['id']) {
+    if ($_POST['registerID'] == $row['ID']) {
       return true;
     }
 

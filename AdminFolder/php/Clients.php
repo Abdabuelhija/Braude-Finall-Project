@@ -25,9 +25,10 @@ echo "";
         $lastname = $row['lastname'];
         $email = $row['email'];
         $carType = $row['carType'];
+        $img=$row['img'];
         echo "
             <div class='card' style='width: 18rem;'>
-              <img class='card-img-top' src='../../Imgs/Defult.png' alt='Card image cap'>
+              <img class='card-img-top' src=$img >
                 <div class='card-body'>
                 <h5 class='card-title'>$firstname $lastname</h5>
                 ID :", $row['ID'], "<br>

@@ -6,6 +6,7 @@ session_start();
 <html>
 
 <head>
+    <link rel="stylesheet" href="../style/Request.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="../../ExternalStyle/FormStyle.css" />
@@ -61,7 +62,7 @@ function findProblem($description)
 
     // Check if the description is too short or doesn't have enough words
     if (strlen($description) < 10 || str_word_count($description) < 3) {
-        echo '<center><h6 style="color:red">Error: Please provide a more detailed description.</h6></center>';
+        echo '<center><div class="message-output">Error: Please provide a more detailed description.</div></center>';
         return; // Exit the function early
     }
 
@@ -127,9 +128,9 @@ function findProblem($description)
             $ProblemID = $row['ProblemID'];
         }
         if ($TotaPrice <= 0 || $TotalProcessTime <= 0) {
-            echo "<br>The price of your problem and the expected fix time is unknown.";
+            echo "<div class='message-output'><p class='result-msg__text'>The price of your problem and the expected fix time is unknown.</p></div>";
         } else {
-            echo "The price of your problem is a maximum of $TotaPrice shekels <br> and the expected fix time is about $TotalProcessTime minutes.";
+            echo "<div class='message-output'><p class='result-msg__title'>The price of your problem is a maximum of $TotaPrice shekels </p><p class='result-msg__subtitle'> and the expected fix time is about $TotalProcessTime minutes.</p></div>";
         }
 
         $ProblemID = $similarId; // Set the ProblemID to similarId
@@ -185,10 +186,11 @@ function findProblem($description)
     }
 
     if ($TotaPrice <= 0 || $TotalProcessTime <= 0) {
-        echo "<br>The price of your problem and the expected fix time is unknown.";
+        echo "<div class='message-output'><p class='result-msg__text'>The price of your problem and the expected fix time is unknown.</p></div>";
     } else {
-        echo "The price of your problem is a maximum of $TotaPrice shekels <br> and the expected fix time is about $TotalProcessTime minutes.";
+        echo "<div class='message-output'><p class='result-msg__title'>The price of your problem is a maximum of $TotaPrice shekels </p><p class='result-msg__subtitle'> and the expected fix time is about $TotalProcessTime minutes.</p></div>";
     }
+
 
     findWorker($TotalProcessTime, $ProblemID);
 }
@@ -217,7 +219,10 @@ function findWorker($TotalProcessTime, $ProblemID)
             $newstartTime = $finishTime + 1;
             $newFinishTimeFormatted = date("H:i:s", $newFinishTime);
             $newstartTimeFormatted = date("H:i:s", $newstartTime);
-            echo "<br>The worker will start processing your request at $newstartTimeFormatted and finish at $newFinishTimeFormatted";
+
+            echo "<div class='timestamp'>";
+            echo "<p>The worker will start processing your request at <span class='highlight'>$newstartTimeFormatted</span> and finish at <span class='highlight'>$newFinishTimeFormatted</span></p>";
+
             $sql3 = "INSERT INTO requests (clientID, workerID, status, description, Date, finishTime, startTime, ProblemID) 
                 VALUES ('$CID', '$workerID', 'Processing', '$description', CURDATE(), '$newFinishTimeFormatted', '$newstartTimeFormatted', '$ProblemID')";
             $conn->query($sql3);
@@ -237,14 +242,18 @@ function findWorker($TotalProcessTime, $ProblemID)
                     WHERE shift.Date = CURDATE() AND workers.competence = '$carType'";
                 $conn->query($sql6);
             }
-            echo "<br>Your request is being processed by worker $workerID.";
+            echo "<p>Your request is being processed by worker <span class='highlight'>$workerID</span>.</p>";
+            echo "</div>";
         } else {
             $now = strtotime(date("H:i:s"));
             $newFinishTime = $now + $TotalProcessTime;
             $newstartTime = $now;
             $newFinishTimeFormatted = date("H:i:s", $newFinishTime);
             $newstartTimeFormatted = date("H:i:s", $newstartTime);
-            echo "<br>The worker will start processing your request now and finish at $newFinishTimeFormatted";
+
+            echo "<div class='timestamp'>";
+            echo "<p>The worker will start processing your request now and finish at <span class='highlight'>$newFinishTimeFormatted</span></p>";
+
             $sql3 = "INSERT INTO requests (clientID, workerID, status, Date, finishTime, startTime, ProblemID) 
                 VALUES ('$CID', '$workerID', 'Processing', CURDATE(), '$newFinishTimeFormatted', '$newstartTimeFormatted', '$ProblemID')";
             $conn->query($sql3);
@@ -264,7 +273,8 @@ function findWorker($TotalProcessTime, $ProblemID)
                     WHERE shift.Date = CURDATE() AND workers.competence = '$carType'";
                 $conn->query($sql6);
             }
-            echo "<br>Your request is being processed by worker $workerID.";
+            echo "<p>Your request is being processed by worker <span class='highlight'>$workerID</span>.</p>";
+            echo "</div>";
         }
     } else {
         echo "<br>All workers are busy. Please try again later.";

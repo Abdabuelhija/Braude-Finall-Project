@@ -1,44 +1,66 @@
-.topnav {
-    overflow: hidden;
-    text-align: center;
-    padding: 20px ;
-    background-color: #F34C19;
-    border-radius: 5px;
-    margin: auto;
-    }
-  .topnav a {
-    color: #ffffff;
-    text-align: center;
-    padding: 14px 30;
-    text-decoration: none;
-    font-size: 17px;
-  }
-  .topnav a:hover {
-    color: rgb(255, 255, 255);
-    text-decoration: none;
-  }
-  .Logo{
-  border-radius: 90%;
-  width: 30px;
-  border-radius: 100%;
-  }
-  a.right{
-    position: absolute;
-    right: 0;
-    padding: 0px 30px;
-        } */
-  .Logo{
-  width:70px;
-  margin-top:-10px;
-  }
-  .topnav .Logout {
-    color: #d1c8c8;
-    text-align: center;
-    padding: 14px 30;
-    text-decoration: none;
-    font-size: 17px;
-}
-.Logout:hover {
-    color: rgb(255, 255, 255);
+/* Global settings */
+body {
+  font-family: Arial, sans-serif;
 }
 
+/* Navbar styling */
+.topnav {
+  display: flex;
+  justify-content: center; /* updated this line */
+  align-items: center;
+  padding: 20px;
+  background-color: #333;
+  text-decoration: none;
+}
+
+.topnav a {
+  color: #fff;
+  text-align: center;
+  padding: 0 20px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.topnav a:hover {
+  color: #F4A261; 
+  text-decoration: none;
+
+}
+
+.Logo {
+  width: 70px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.Logout {
+  color: #BDBDBD;
+  transition: color 0.3s ease;
+}
+
+.Logout:hover {
+  color: #E9C46A; 
+}
+
+a.right {
+  padding-right: 30px;
+}
+/* Login link styling */
+.topnav2 {
+  display: inline-block;
+  color: #333;
+  font-size: 18px;
+  text-decoration: none;
+  padding: 10px 20px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.topnav2:hover {
+  color: #F4A261;
+  transition: color 0.3s ease;
+  text-decoration: none;
+}

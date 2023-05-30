@@ -1,68 +1,112 @@
-.Add-Worker{
+
+/* Global settings */
+/* body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+} */
+
+.container-fluid {
+  width: 95%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Card styling */
+.info {
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* Today styling */
+.Today .info {
+  margin-bottom: 0;
+}
+
+.Today .text-sm {
+  margin-bottom: 10px;
+}
+
+.Today h5 {
+  font-size: 1.2em;
+}
+
+/* General styling */
+.General .info {
+  margin-bottom: 20px;
+}
+
+.General .text-sm {
+  margin-bottom: 10px;
+}
+
+.General h5 {
+  font-size: 1.2em;
+}
+
+/* Main styling */
+.Add-Worker {
+  display: inline-block;
   border: none;
   background-color: #0B8793;
   color: white;
-  border-radius:8px;
+  border-radius: 8px;
   padding: 10px 15px;
   font-size: 20px;
   cursor: pointer;
-  float: right;
-  margin: 10px 10px;
+  margin: 10px 0;
 }
-div.modal-content {
-  border-radius: 1px;
-  width: 150%;
-  height:420px;
-}
+
+/* Modal styling */
 .modal-dialog {
   display: flex;
   justify-content: center;
   align-items: center;
-   min-height: 100vh;
+  min-height: 100vh;
 }
-.Date{
-  border-radius:8px;
+
+.modal-content {
+  border-radius: 1px;
+  width: 70%;
+  height: 420px;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.Date {
+  display: inline-block;
+  border-radius: 8px;
   padding: 10px 15px;
   font-size: 20px;
   cursor: pointer;
-  margin: 10px 10px;
+  margin: 10px 0;
 }
 
-/* .card-header.p-3.pt-2 {
-  background-color: rgb(247, 247, 247);
-  border-radius: 10px;
-  box-shadow: 0 8px 6px -6px black;
-  margin-top: 60px;
-  box-shadow: 10px 15px lightblue;
-} */
-
-.mb-0,
-.my-0 {
-  padding: 10 0;
-}
-
+/* Table styling */
 .table {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 20px auto;
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
 }
 
 .table thead {
   background-color: #f8f8f8;
-}
-
-.table thead tr {
-  border-bottom: 1px solid #ddd;
+  text-transform: uppercase;
 }
 
 .table thead th {
   padding: 15px;
-  text-transform: uppercase;
-  font-weight: bold;
   color: #666;
+  font-weight: 700;
 }
 
 .table tbody tr:nth-child(even) {
@@ -72,6 +116,7 @@ div.modal-content {
 .table tbody tr:hover {
   background-color: #eee;
 }
+
 .table tbody td {
   padding: 15px;
   color: #666;
@@ -84,6 +129,7 @@ div.modal-content {
 
 .table tbody td a {
   color: #3498db;
+  text-decoration: none;
 }
 .CardGrid{
   display: grid;
@@ -93,6 +139,3 @@ div.modal-content {
   margin-top: 50px;
   margin-bottom: 50px;
 }
-
-
-

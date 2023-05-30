@@ -22,6 +22,7 @@ function CheckAccount()
         $_SESSION["email"] = $row['email'];
         $_SESSION["carType"] = $row['carType'];
         $_SESSION["PhoneNumber"] = $row['PhoneNumber'];
+        $_SESSION["img"] = $row['img'];
         $_SESSION['count'] = 0;
         if ($row['isBlocked'] === 'Yes') {
           header("location:ClientFolder/php/Repass.php");
@@ -58,6 +59,7 @@ function CheckAccount()
         $_SESSION["status"] = $row['status'];
         $_SESSION["competence"] = $row['competence'];
         $_SESSION["password"] = $row['password'];
+        $_SESSION["img"] = $row['img'];
         $_SESSION['count'] = 0;
         header("location:WorkerFolder/php/Requests.php");
       } else {

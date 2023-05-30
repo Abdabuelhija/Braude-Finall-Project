@@ -29,10 +29,11 @@ session_start();
   $Email = $_SESSION["email"];
   $CarType = $_SESSION["carType"];
   $PhoneNumber = $_SESSION["PhoneNumber"];
+  $img = $_SESSION["img"];
   ?>
   <div class="g">
     <div class="card">
-      <img src="../../Imgs/Defult.png" class="DefultImg">
+      <img src="<?php echo $img; ?>" class="DefultImg">
       <div class="container">
         <h2><b>
             <?php echo $_SESSION['firstname'] . " " . $_SESSION['lastname'] ?>
@@ -57,7 +58,7 @@ session_start();
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content" style="height: 610px;">
+      <div class="modal-content" style="height: 710px;">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">
             <h2>Add worker</h2>
@@ -98,6 +99,11 @@ session_start();
               <input type="text" id="carID" name="carID" minlength="4" class="form-control"
                 value="<?php echo $CarID; ?>" required><br>
             </div>
+            <div class="form-group col-md-12">
+              <label>Img url</label>
+              <input type="text" id="imgurl" name="imgurl" class="form-control"
+                value="<?php echo $img; ?>" required><br>
+            </div>
             <div class="form-group col-md-6">
               <label>Car type</label>
               <select name="CarType" id="CarType" class="form-control form-control-lg" required>
@@ -129,6 +135,8 @@ if (isset($_POST['update'])) {
   $newPassword = $_POST['password'];
   $newCarID = $_POST['carID'];
   $newCarType = $_POST['CarType'];
+  $newimgurl=$_POST['imgurl'];
+
   $sql = "UPDATE customers SET 
     PhoneNumber = '$newPhoneNumber', 
     firstname = '$newFirstName', 
@@ -136,7 +144,8 @@ if (isset($_POST['update'])) {
     email = '$newEmail', 
     pass = '$newPassword', 
     carID = '$newCarID', 
-    carType = '$newCarType'
+    carType = '$newCarType',
+    img='$newimgurl'
     WHERE ID = '$ID'";
   if ($conn->query($sql) === TRUE) {
       $_SESSION["carID"] =$newCarID;
@@ -146,6 +155,8 @@ if (isset($_POST['update'])) {
       $_SESSION["email"] =$newEmail;
       $_SESSION["carType"] =$newCarType;
       $_SESSION["PhoneNumber"] = $newPhoneNumber;
+      $_SESSION["img"] = $newimgurl;
+
     echo "<script>alert('the changes were successfully saved ');</script>";
   }
 }
