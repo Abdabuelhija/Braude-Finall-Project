@@ -80,8 +80,8 @@ function CheckAccount()
         return;
       }
     }
-    echo '<center>', '<h6 style="color:red">', "account not exist";
   }
+  echo '<center>', '<h6 style="color:red">', "account not exist";
 }
 function blockUser($UserMail)
 {
