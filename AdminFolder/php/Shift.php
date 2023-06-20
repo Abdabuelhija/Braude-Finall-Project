@@ -7,7 +7,7 @@ session_start();
 <html>
 
 <head>
-<link rel="stylesheet" href="../style/Products.css" />
+  <link rel="stylesheet" href="../style/Products.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -22,11 +22,15 @@ session_start();
 </head>
 
 <body>
-  <input type="date" id="date-input" class="Date">
+  <form method="post" style="display:contents">
+    <input type="date" name="dateInput" class="Date">
+    <input type="submit" class="Date" name='ShowShift' value="Show shift">
+  </form>
+
   <button type="button" class="Add-Worker" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"
       aria-hidden="true"></i> Add Worker </button>
 
-  <table class="table" id="results-table" style="text-align:center;">
+      <table class="table" id="results-table" style="text-align:center;">
     <thead>
       <tr>
         <th>Worker</th>
@@ -34,8 +38,44 @@ session_start();
         <th>Delete</th>
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody>
+      <?php
+      include "../../db_connection.php";
+      if (isset($_POST['delete_worker_id']) && isset($_POST['delete_date'])) {
+        $workerId = $_POST['delete_worker_id'];
+        $dateInput = $_POST['delete_date'];
+        $sql = "DELETE FROM shift WHERE WorkerID = '$workerId' AND Date = '$dateInput'";
+        if ($conn->query($sql)) {
+          echo "<script>alert('Shift deleted successfully')</script>";
+        }
+      }
+      if (isset($_POST['ShowShift'])) {
+        $dateInput = $_POST['dateInput'];
+        $sql = "SELECT shift.Date, shift.WorkerID, shift.ShiftHours, workers.firstname, workers.lastname FROM shift JOIN workers ON shift.WorkerID = workers.ID WHERE Date = '$dateInput'";
+        $result = $conn->query($sql);
+        while ($row = mysqli_fetch_array($result)) {
+          $workerId = $row['WorkerID'];
+          $shiftHours = $row['ShiftHours'];
+          $shiftDate = $row['Date'];
+          $firstName = $row['firstname'];
+          $lastName = $row['lastname'];
+          echo "<tr>";
+          echo "<td>$firstName $lastName</td>";
+          echo "<td>$shiftHours</td>";
+          echo "<td>";
+          echo "<form method='post'>";
+          echo "<input type='hidden' name='delete_worker_id' value='$workerId'>";
+          echo "<input type='hidden' name='delete_date' value='$dateInput'>";
+          echo "<input type='submit' class='btn btn-danger delete-worker' value='Delete'>";
+          echo "</form>";
+          echo "</td>";
+          echo "</tr>";
+        }
+      }
+      ?>
+    </tbody>
   </table>
+
 
   <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -63,9 +103,9 @@ session_start();
                 $lastname = $row['lastname'];
                 $WorkerID = $row['ID'];
                 echo "
-          <option value=$WorkerID>",
+                  <option value=$WorkerID>",
                   $row['firstname'], $row['lastname'], "
-          </option>";
+                  </option>";
               }
               ?>
             </select>
@@ -86,68 +126,6 @@ session_start();
       </div>
     </div>
   </div>
-
-  <script>
-    $(document).ready(function () {
-      $(document).ready(function () {
-        $('#date-input').change(function () {
-          $.get('getShifts.php', { date: $(this).val() }, function (data) {
-            $('#results-table tbody').empty();
-            var shifts = JSON.parse(data);
-            for (var i = 0; i < shifts.length; i++) {
-              var workerId = shifts[i].WorkerID;
-              var shiftHours = shifts[i].ShiftHours;
-              var shiftDate = shifts[i].Date;
-              var deleteButton = '<button class="btn btn-danger delete-worker" data-worker="' + workerId + '" data-date="' + shiftDate + '"><i class="fa fa-trash " aria-hidden="true"></i></button>';
-              $('#results-table tbody').append('<tr><td>' + shifts[i].firstname + ' ' + shifts[i].lastname + '</td><td>' + shifts[i].ShiftHours + '</td><td>' + deleteButton + '</td></tr>');
-            }
-          });
-        });
-      });
-      // Handle delete button click
-      $('#results-table').on('click', '.delete-worker', function () {
-        var workerId = $(this).data('worker');
-        var shiftDate = $(this).data('date');
-        var date = $('#date-input').val();
-        // Calculate the minimum allowed date for deletion
-        var today = new Date();
-        var minDeleteDate = new Date();
-        minDeleteDate.setDate(today.getDate() - 1);
-        // Convert shift date to a Date object
-        var shiftDateObj = new Date(shiftDate);
-        // Check if the shift date is at least 7 days prior to today
-        if (shiftDateObj >= minDeleteDate) {
-          // Display confirmation dialog
-          var confirmed = confirm('Are you sure you want to delete this worker?');
-          if (confirmed) {
-            // Send AJAX request to deleteWorker.php
-            $.post('deleteWorker.php', { workerId: workerId, date: date }, function (response) {
-              if (response === 'success') {
-                // Refresh the table after successful deletion
-                $('#date-input').trigger('change');
-              } else {
-                alert('Failed to delete the worker.');
-              }
-            });
-          }
-        }
-        else {
-          alert('Deletion is only allowed for shifts that are at least 7 days prior to the current date.');
-        }
-      });
-    });
-
-    // this for the add worker date input :
-    // Get current date
-    var currentDate = new Date();
-    // Calculate minimum selectable date (current date + 7 days)
-    var minDate = new Date();
-    minDate.setDate(currentDate.getDate() + 7);
-    // Format the minimum date as YYYY-MM-DD (required by the date input)
-    var formattedMinDate = minDate.toISOString().split('T')[0];
-    // Set the minimum selectable date for the date input
-    document.getElementById('dateInput').setAttribute('min', formattedMinDate);
-  </script>
 
 </body>
 
@@ -183,4 +161,6 @@ function isExist($WorkerID, $Date)
   }
   return false;
 }
+
+
 ?>
