@@ -30,8 +30,6 @@ session_start();
 </html>
 
 <?php
-
-
 if (isset($_POST['submit'])) {
     if (isAlreadyHaveTurn() == false) {
         $description = $_POST["subject"];

@@ -6,7 +6,7 @@ session_start();
 <html>
 
 <head>
-  <link rel="stylesheet" href="style/ShiftStyle.css">
+  <link rel="stylesheet" href="../style/ShiftStyle.css">
   <title>Abeds Garage-Shift</title>
 </head>
 <body>

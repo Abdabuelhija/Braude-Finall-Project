@@ -110,8 +110,4 @@ function ifAccountExistRegister()
   return false;
 }
 
-function getInputsError()
-{
-
-}
 ?>
