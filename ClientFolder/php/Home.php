@@ -78,10 +78,6 @@ function findProblem($description)
         die("Error executing statement: " . $stmt->error);
     }
     $result = $stmt->get_result();
-    if ($result->num_rows > 0) {
-        // Original code...
-        // If no match was found, continue to check for similar problems
-    }
 
     // Check if there is a similar description in the database
     $sql = "SELECT ID, description FROM problems WHERE carType = ?";
@@ -100,7 +96,6 @@ function findProblem($description)
             $similarId = $row['ID'];
         }
     }
-    //...
     if ($maxSimilarity > 80.0 && $suggestedDescription !== $description) {
         echo "<center><h6 style='color:orange'>Did you mean: '" . $suggestedDescription . "'?</h6></center>";
         // Retrieve the similar problem's details from the database
@@ -130,7 +125,6 @@ function findProblem($description)
         } else {
             echo "<div class='message-output'><p class='result-msg__title'>The price of your problem is a maximum of $TotaPrice shekels </p><p class='result-msg__subtitle'> and the expected fix time is about $TotalProcessTime minutes.</p></div>";
         }
-
         $ProblemID = $similarId; // Set the ProblemID to similarId
         findWorker($TotalProcessTime, $ProblemID);
 
