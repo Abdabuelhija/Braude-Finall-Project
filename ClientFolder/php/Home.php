@@ -58,10 +58,9 @@ function findProblem($description)
     $carType = $_SESSION['carType'];
     $ProblemID = 0;
 
-    // Check if the description is too short or doesn't have enough words
     if (strlen($description) < 10 || str_word_count($description) < 3) {
         echo '<center><div class="message-output">Error: Please provide a more detailed description.</div></center>';
-        return; // Exit the function early
+        return; 
     }
 
     // Check if the description already exists in the database
@@ -196,12 +195,15 @@ function findWorker($TotalProcessTime, $ProblemID)
     $carType = $_SESSION['carType'];
     $description = $_POST["subject"];
     $CID = $_SESSION['id'];
-    $sql = "SELECT s.WorkerID FROM shift s JOIN workers w ON s.WorkerID = w.ID WHERE s.Histurn = 0 AND s.Date = CURDATE() AND w.competence = '$carType' LIMIT 1";
+    $sql = "SELECT s.WorkerID, w.firstname, w.lastname FROM shift s JOIN workers w ON s.WorkerID = w.ID WHERE s.Histurn = 0 AND s.Date = CURDATE() AND w.competence = '$carType' LIMIT 1";
+
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $workerID = $row['WorkerID'];
+        $worker_Fname=$row['firstname'];
+        $worker_Lname=$row['lastname'];
         $sql2 = "SELECT * FROM requests WHERE date = CURDATE() AND status = 'Processing' AND workerID= '$workerID'";
         $result2 = $conn->query($sql2);
         $row2 = $result2->fetch_assoc();
@@ -234,7 +236,7 @@ function findWorker($TotalProcessTime, $ProblemID)
                     WHERE shift.Date = CURDATE() AND workers.competence = '$carType'";
                 $conn->query($sql6);
             }
-            echo "<p>Your request is being processed by worker <span class='highlight'>$workerID</span>.</p>";
+            echo "<p>Your request is being processed by worker <span class='highlight'>$worker_Fname $worker_Lname</span>.</p>";
             echo "</div>";
         } else {
             $now = strtotime(date("H:i:s"));
@@ -265,10 +267,10 @@ function findWorker($TotalProcessTime, $ProblemID)
                     WHERE shift.Date = CURDATE() AND workers.competence = '$carType'";
                 $conn->query($sql6);
             }
-            echo "<p>Your request is being processed by worker <span class='highlight'>$workerID</span>.</p>";
+            echo "<p>Your request is being processed by worker <span class='highlight'>$worker_Fname $worker_Lname</span>.</p>";
             echo "</div>";
         }
     } else {
-        echo "<br>All workers are busy. Please try again later.";
+        echo "<div class='message-output'><p class='result-msg__text'>All workers are busy, Please try again later </p></div>";
     }
 }

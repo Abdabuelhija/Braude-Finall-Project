@@ -190,7 +190,6 @@ if (isset($_POST['addProduct'])) {
   $ProductID = $_POST['AddP'];
   $quantity = $_POST['quantity'];
   $counterValue = $_POST['counterValue'];
-
   $sql = "UPDATE products SET avgCount = avgCount + 1 WHERE ID = '$ProductID'";
   $conn->query($sql);
   $Search = mysqli_query($conn, "SELECT * FROM products WHERE ID = '$ProductID'");

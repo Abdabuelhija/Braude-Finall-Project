@@ -58,7 +58,7 @@ session_start();
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content" style="height: 710px;">
+      <div class="modal-content" style="height: 810px;">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">
             <h2>Add worker</h2>
