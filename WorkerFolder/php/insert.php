@@ -332,7 +332,6 @@ if (isset($_POST['closeturn'])) {
         echo "Error: " . $insertSql . "<br>" . $conn->error;
       }
     }
-
     header("Refresh:0");
   } else {
     echo '<center>', '<h6 style="color:red">', "Error: " . $sql . "<br>" . $conn->error;

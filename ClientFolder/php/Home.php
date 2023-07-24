@@ -67,23 +67,18 @@ function findProblem($description)
     $sql = "SELECT p.price, p.expectedFixTime, prob.ID as ProblemID FROM problems prob
             INNER JOIN turnProblems tp ON prob.ID = tp.ProblemID
             INNER JOIN products p ON tp.ProductID = p.ID
-            WHERE prob.description = ? AND prob.carType = ?";
-    $stmt = $conn->prepare($sql);
-    if ($stmt === false) {
-        die("Error preparing statement: " . $conn->error);
-    }
-    $stmt->bind_param("ss", $description, $carType);
-    if (!$stmt->execute()) {
-        die("Error executing statement: " . $stmt->error);
-    }
-    $result = $stmt->get_result();
+            WHERE prob.description = '$description' AND prob.carType = '$carType'";
+        $result = $conn->query($sql);
+        if ($result === FALSE) {
+            echo '<center>', '<h6 style="color:red">', "Error: " . $sql . "<br>" . $conn->error;
+        } 
 
     // Check if there is a similar description in the database
-    $sql = "SELECT ID, description FROM problems WHERE carType = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $carType);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $sql = "SELECT ID, description FROM problems WHERE carType = '$carType'";
+    $result = $conn->query($sql);
+    if ($result === FALSE) {
+        echo '<center>', '<h6 style="color:red">', "Error: " . $sql . "<br>" . $conn->error;
+    } 
     $similarId = null;
     $maxSimilarity = 0.0;
     $suggestedDescription = "";
@@ -101,17 +96,11 @@ function findProblem($description)
         $sql = "SELECT p.price, p.expectedFixTime, prob.ID as ProblemID FROM problems prob
         INNER JOIN turnProblems tp ON prob.ID = tp.ProblemID
         INNER JOIN products p ON tp.ProductID = p.ID
-        WHERE prob.ID = ? AND prob.carType = ?";
-        $stmt = $conn->prepare($sql);
-        if ($stmt === false) {
-            die("Error preparing statement: " . $conn->error);
-        }
-        $stmt->bind_param("is", $similarId, $carType); // Note the change from "ss" to "is"
-        if (!$stmt->execute()) {
-            die("Error executing statement: " . $stmt->error);
-        }
-        $result = $stmt->get_result();
-
+        WHERE prob.ID = '$similarId' AND prob.carType = '$carType'";
+        $result = $conn->query($sql);
+        if ($result === FALSE) {
+            echo '<center>', '<h6 style="color:red">', "Error: " . $sql . "<br>" . $conn->error;
+        } 
         $TotaPrice = 0;
         $TotalProcessTime = 0;
         while ($row = $result->fetch_assoc()) {
@@ -126,27 +115,21 @@ function findProblem($description)
         }
         $ProblemID = $similarId; // Set the ProblemID to similarId
         findWorker($TotalProcessTime, $ProblemID);
-
         return; // Exit the function
     }
 
-
     // Insert the new problem into the database if it doesn't already exist
-    $sql = "INSERT INTO problems (description, carType) SELECT ?, ? FROM DUAL WHERE NOT EXISTS (SELECT * FROM problems WHERE description = ? AND carType = ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssss", $description, $carType, $description, $carType);
-    if (!$stmt->execute()) {
-        echo '<center><h6 style="color:red">Error: ' . $stmt->error . '</h6></center>';
+    $sql = "INSERT INTO problems (description, carType) SELECT '$description', '$carType' FROM DUAL WHERE NOT EXISTS (SELECT * FROM problems WHERE description = '$description' AND carType = '$carType')";
+    if ($conn->query($sql) === false) {
+        echo '<center>', '<h6 style="color:red">', "Error: " . $sql . "<br>" . $conn->error;
     }
 
     // Retrieve the ProblemID
-    $sql = "SELECT ID FROM problems WHERE description = ? AND carType = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $description, $carType);
-    if (!$stmt->execute()) {
-        die("Error executing statement: " . $stmt->error);
-    }
-    $result = $stmt->get_result();
+    $sql = "SELECT ID FROM problems WHERE description = '$description' AND carType = '$carType'";
+    $result = $conn->query($sql);
+    if ($result === FALSE) {
+        echo '<center>', '<h6 style="color:red">', "Error: " . $sql . "<br>" . $conn->error;
+    } 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $ProblemID = $row['ID'];
@@ -156,20 +139,13 @@ function findProblem($description)
     $sql = "SELECT p.price, p.expectedFixTime, tp.quantity, prob.ID as ProblemID FROM problems prob
                 INNER JOIN turnProblems tp ON prob.ID = tp.ProblemID
                 INNER JOIN products p ON tp.ProductID = p.ID
-                WHERE prob.ID = ? AND prob.carType = ?";
-    $stmt = $conn->prepare($sql);
-    if ($stmt === false) {
-        die("Error preparing statement: " . $conn->error);
-    }
-    $stmt->bind_param("is", $ProblemID, $carType); // Note the change from "ss" to "is"
-    if (!$stmt->execute()) {
-        die("Error executing statement: " . $stmt->error);
-    }
-    $result = $stmt->get_result();
-
+                WHERE prob.ID = '$ProblemID' AND prob.carType = '$carType'";
+    $result = $conn->query($sql);
+    if ($result === FALSE) {
+        echo '<center>', '<h6 style="color:red">', "Error: " . $sql . "<br>" . $conn->error;
+    } 
     $TotaPrice = 0;
     $TotalProcessTime = 0;
-
     while ($row = $result->fetch_assoc()) {
         $TotaPrice += ($row['price'] * $row['quantity']);
         $TotalProcessTime += ($row['expectedFixTime'] * $row['quantity']);
@@ -181,8 +157,6 @@ function findProblem($description)
     } else {
         echo "<div class='message-output'><p class='result-msg__title'>The price of your problem is a maximum of $TotaPrice shekels </p><p class='result-msg__subtitle'> and the expected fix time is about $TotalProcessTime minutes.</p></div>";
     }
-
-
     findWorker($TotalProcessTime, $ProblemID);
 }
 

@@ -52,12 +52,8 @@ include "../../db_connection.php";
 $data = [
     ["Today", "", ""],
     ["Workers in the shift", 'fa-briefcase', "SELECT shift.*, workers.firstname, workers.lastname FROM shift INNER JOIN workers ON shift.WorkerID = workers.ID WHERE shift.Date = CURDATE()"],
-    ["Request in Processing ", 'fa-briefcase', 'SELECT * FROM requests WHERE status="Processing" AND Date = CURDATE()'],
-    ["The Next Audi Request Go to ", 'fa-briefcase', 'SELECT shift.*, workers.firstname, workers.lastname FROM shift INNER JOIN workers ON shift.WorkerID = workers.ID WHERE workers.competence="Audi" AND shift.Date = CURDATE()'],
-    ["The Next BMW Request Go to ", 'fa-briefcase', 'SELECT shift.*, workers.firstname, workers.lastname FROM shift INNER JOIN workers ON shift.WorkerID = workers.ID WHERE workers.competence="BMW" AND shift.Date = CURDATE()'],
-    ["The Next Skoda Request Go to ", 'fa-briefcase', 'SELECT shift.*, workers.firstname, workers.lastname FROM shift INNER JOIN workers ON shift.WorkerID = workers.ID WHERE workers.competence="Skoda" AND shift.Date = CURDATE()'],
-    ["The Next Mercedes Request Go to ", 'fa-briefcase', 'SELECT shift.*, workers.firstname, workers.lastname FROM shift INNER JOIN workers ON shift.WorkerID = workers.ID WHERE workers.competence="Mercedes" AND shift.Date = CURDATE()'],
-    ["The Next Volkswagen Request Go to ", 'fa-briefcase', 'SELECT shift.*, workers.firstname, workers.lastname FROM shift INNER JOIN workers ON shift.WorkerID = workers.ID WHERE workers.competence="Volkswagen" AND shift.Date = CURDATE()'],
+    ["Requests in Processing ", 'fa-briefcase', 'SELECT * FROM requests WHERE status="Processing" AND Date = CURDATE()'],
+    ["Processed Requests   ", 'fa-briefcase', 'SELECT * FROM requests WHERE status="Done" AND Date = CURDATE()'],
 ];
 
 

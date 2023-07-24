@@ -19,13 +19,15 @@ echo "";
 </head>
 
 <body>
-    <button type="button" class="Add-Worker" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"
-            aria-hidden="true"></i> Add Worker </button><br>
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <button type="button" class="Add-Worker" data-toggle="modal" data-target="#AddWorkerModal"><i class="fa fa-plus"
+            aria-hidden="true"></i> Add Worker </button>
+    <button type="button" class="Add-Worker" data-toggle="modal" data-target="#AddSpecializationModal"><i
+            class="fa fa-plus" aria-hidden="true"></i> Add Specialization </button><br>
+    <!-- Add Worker Modal -->
+    <div class="modal fade" id="AddWorkerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content" style="height: 610px;">
+            <div class="modal-content" style="height: 800px;">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">
                         <h2>Add worker</h2>
@@ -48,16 +50,24 @@ echo "";
                             required><br>
                         <input type="password" placeholder="password" id="password" name="password" minlength="4"
                             class="form-control" required><br>
-                        <input type="text" placeholder="imgurl" id="imgurl" name="imgurl"
-                            class="form-control" required><br>
+                        <input type="text" placeholder="imgurl" id="imgurl" name="imgurl" class="form-control"
+                            required><br>
                         Competence:
-                        <select name="competence" id="competence" class="form-control form-control-lg" required>
-                            <option value="mercedes" name="mercedes">Mercedes</option>
-                            <option value="bmw" name="bmw">BMW</option>
-                            <option value="volkswagen" name="volkswagen">Volkswagen</option>
-                            <option value="audi" name="audi">Audi</option>
-                            <option value="skoda" name="skoda">Skoda</option>
-                        </select>
+                        <?php
+                        include "../../db_connection.php";
+                        $sql = "SELECT * FROM specialization";
+                        $result = mysqli_query($conn, $sql);
+                        if (mysqli_num_rows($result) > 0) {
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                $specialization = $row["specialization"];
+                                echo '<div class="form-check">';
+                                echo "<input class='form-check-input' type='checkbox' name='{$specialization}' value='{$specialization}'>";
+                                echo "<label class='form-check-label'>{$specialization}</label>";
+                                echo '</div>';
+                            }
+                            
+                        }
+                        ?>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary" name="submit"
@@ -68,6 +78,35 @@ echo "";
             </div>
         </div>
     </div>
+
+    <!-- Add Specialization Modal  -->
+    <div class="modal fade" id="AddSpecializationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="height: 250px;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        <h2>Add Specialization</h2>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        <input type="text" id="SpecializationInput" name="SpecializationInput" placeholder="Audi"
+                            class="form-control" required><br>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" name="AddSpecializationSubmit"
+                                style="background-color:#0B8793 ;">Add Specialization</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="CardGrid">
         <?php
         include "../../db_connection.php";
@@ -79,7 +118,7 @@ echo "";
                 $firstname = $row['firstname'];
                 $lastname = $row['lastname'];
                 $competence = $row['competence'];
-                $img=$row['img'];
+                $img = $row['img'];
                 echo
                     "<div class='card' style='width: 18rem;'>
                     <img class='card-img-top' src=$img>
@@ -97,6 +136,16 @@ echo "";
         }
         ?>
     </div>
+    <script>
+    function validateForm() {
+      var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
+      if (!checkedOne) {
+        alert("Please select at least one option");
+        return false;
+      }
+    }
+  </script>
 </body>
 
 </html>
@@ -113,7 +162,7 @@ if (isset($_POST['submit'])) {
     $password = $_POST['password'];
     $phonenumber = $_POST['phonenumber'];
     $imgurl = $_POST['imgurl'];
-    
+
     if (!(is_numeric($id))) {
         echo "<script>alert('the ID not a number');</script>";
         return;
@@ -131,6 +180,16 @@ if (isset($_POST['submit'])) {
         echo "<script>alert('The Worker already exist');</script>";
     }
 }
+if (isset($_POST['AddSpecializationSubmit'])) {
+    $specializationInput = $_POST['SpecializationInput'];
+    $sql = "INSERT INTO specialization (specialization) VALUES ('$specializationInput')";
+    if ($conn->query($sql) === True) {
+        echo "<script>alert('the specialization inserted ');</script>";
+    } else {
+        echo '<center>', '<h6 style="color:red">', "Error: " . $sql . "<br>" . $conn->error;
+    }
+}
+
 function isWorkerFound()
 {
     include "../../db_connection.php";
