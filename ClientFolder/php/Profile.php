@@ -61,7 +61,7 @@ session_start();
       <div class="modal-content" style="height: 810px;">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">
-            <h2>Add worker</h2>
+            <h2>Update informations</h2>
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
