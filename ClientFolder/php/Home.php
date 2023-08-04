@@ -30,14 +30,22 @@ session_start();
 </html>
 
 <?php
+
 if (isset($_POST['submit'])) {
     if (isAlreadyHaveTurn() == false) {
-        $description = $_POST["subject"];
-        findProblem($description);
+        // check if today is not Saturday (6 is the number for Saturday in PHP's date function)
+        // and if the current hour is less than 17
+        if(date('w') != 6 || date('H') < 17){
+            $description = $_POST["subject"];
+            findProblem($description);
+        } else {
+            echo "The store is closed,try again later .";
+        }
     } else {
-        echo "<script>alert('You already sent request');</script>";
+        echo "<script>alert('You already sent a request');</script>";
     }
 }
+
 
 function isAlreadyHaveTurn()
 {
@@ -57,23 +65,12 @@ function findProblem($description)
     include "../../db_connection.php";
     $carType = $_SESSION['carType'];
     $ProblemID = 0;
-
+   //  1) check if the description is too short .
     if (strlen($description) < 10 || str_word_count($description) < 3) {
         echo '<center><div class="message-output">Error: Please provide a more detailed description.</div></center>';
         return; 
     }
-
-    // Check if the description already exists in the database
-    $sql = "SELECT p.price, p.expectedFixTime, prob.ID as ProblemID FROM problems prob
-            INNER JOIN turnProblems tp ON prob.ID = tp.ProblemID
-            INNER JOIN products p ON tp.ProductID = p.ID
-            WHERE prob.description = '$description' AND prob.carType = '$carType'";
-        $result = $conn->query($sql);
-        if ($result === FALSE) {
-            echo '<center>', '<h6 style="color:red">', "Error: " . $sql . "<br>" . $conn->error;
-        } 
-
-    // Check if there is a similar description in the database
+    // 2 )Check if there is a similar description in the database
     $sql = "SELECT ID, description FROM problems WHERE carType = '$carType'";
     $result = $conn->query($sql);
     if ($result === FALSE) {
@@ -82,7 +79,9 @@ function findProblem($description)
     $similarId = null;
     $maxSimilarity = 0.0;
     $suggestedDescription = "";
+    // get the description that the most close to the customer description.
     while ($row = $result->fetch_assoc()) {
+        // (the number of the matching letters between the two strings / the number of the leters in the begist string) *100
         similar_text($description, $row['description'], $percent);
         if ($percent > $maxSimilarity) {
             $maxSimilarity = $percent;
@@ -90,6 +89,7 @@ function findProblem($description)
             $similarId = $row['ID'];
         }
     }
+        // 3) 
     if ($maxSimilarity > 80.0 && $suggestedDescription !== $description) {
         echo "<center><h6 style='color:orange'>Did you mean: '" . $suggestedDescription . "'?</h6></center>";
         // Retrieve the similar problem's details from the database
@@ -123,7 +123,6 @@ function findProblem($description)
     if ($conn->query($sql) === false) {
         echo '<center>', '<h6 style="color:red">', "Error: " . $sql . "<br>" . $conn->error;
     }
-
     // Retrieve the ProblemID
     $sql = "SELECT ID FROM problems WHERE description = '$description' AND carType = '$carType'";
     $result = $conn->query($sql);
@@ -170,9 +169,7 @@ function findWorker($TotalProcessTime, $ProblemID)
     $description = $_POST["subject"];
     $CID = $_SESSION['id'];
     $sql = "SELECT s.WorkerID, w.firstname, w.lastname FROM shift s JOIN workers w ON s.WorkerID = w.ID WHERE s.Histurn = 0 AND s.Date = CURDATE() AND w.competence = '$carType' LIMIT 1";
-
     $result = $conn->query($sql);
-
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $workerID = $row['WorkerID'];
@@ -212,7 +209,8 @@ function findWorker($TotalProcessTime, $ProblemID)
             }
             echo "<p>Your request is being processed by worker <span class='highlight'>$worker_Fname $worker_Lname</span>.</p>";
             echo "</div>";
-        } else {
+        } 
+        else {
             $now = strtotime(date("H:i:s"));
             $newFinishTime = $now + $TotalProcessTime;
             $newstartTime = $now;
