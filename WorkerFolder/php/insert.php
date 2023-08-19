@@ -236,9 +236,6 @@ if (isset($_POST['addProduct'])) {
       // update the quantity in the request.
       $sql = "UPDATE turnproducts SET quantity='$newturnproductquantity' WHERE RequestID='$RequestID' AND ProductID='$ProductID'";
       if ($conn->query($sql) === TRUE) {
-        echo "
-        <script type='text/javascript'>alert('quantity updated');</script>
-        ";
         header("refresh:0");
       }
     } 
@@ -299,18 +296,12 @@ if (isset($_POST['closeturn'])) {
     if ($ToltalAllPrices > 0) {
       $sql = "INSERT INTO receipt (RequestID,WorkerID,TotalPrice,status)
         VALUES ('$RequestID','$WID','$ToltalAllPrices','Not Paid')";
-      if ($conn->query($sql) === TRUE) {
-        echo "
-            <script type='text/javascript'>alert('the reciept created');</script>
-            ";
-      }
-    } else {
+      if ($conn->query($sql) === TRUE) {}
+    }
+     else {
       $sql = "INSERT INTO receipt (RequestID,WorkerID,TotalPrice,status)
         VALUES ('$RequestID','$WID','$ToltalAllPrices','Paid')";
       if ($conn->query($sql) === TRUE) {
-        echo "
-            <script type='text/javascript'>alert('the reciept created');</script>
-            ";
       } else {
         echo "Error in sql query";
       }
@@ -333,11 +324,9 @@ if (isset($_POST['closeturn'])) {
       $QUANTITY = $row3['quantity'];
       $sql4 = "INSERT INTO turnproblems (ProductID, ProblemID, quantity) 
             VALUES ('$PID','$ProblemID','$QUANTITY' )";
-      if ($conn->query($sql4) === TRUE) {
-        echo "<script>alert('New record created successfully');</script>";
-      } else {
+      if ($conn->query($sql4) === FALSE) {
         echo "Error: " . $insertSql . "<br>" . $conn->error;
-      }
+      } 
     }
     header("Refresh:0");
   } else {

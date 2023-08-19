@@ -41,7 +41,7 @@ if (isset($_POST['submit'])) {
             echo "<div class='message-output'><p class='result-msg__text'>The store is closed,try again later </p></div>";
         }
     } else {
-        echo "<script>alert('You already sent a request');</script>";
+        echo "<div class='message-output'><p class='result-msg__text'>You already sent a request</p></div>";
     }
 }
 
