@@ -186,16 +186,18 @@ session_start();
 
 $RequestID = $_SESSION['RID'];
 include "../../db_connection.php";
+
 if (isset($_POST['addProduct'])) {
   $ProductID = $_POST['AddP'];
   $quantity = $_POST['quantity'];
   $counterValue = $_POST['counterValue'];
+  //1) avg time for the expected fix time for the product . 
   $sql = "UPDATE products SET avgCount = avgCount + 1 WHERE ID = '$ProductID'";
   $conn->query($sql);
   $Search = mysqli_query($conn, "SELECT * FROM products WHERE ID = '$ProductID'");
   $row = mysqli_fetch_array($Search);
-
   $newexpectedFixTime = (($counterValue + $row['expectedFixTime']) / $row['avgCount']) / $quantity;
+
   $sql = "update products set expectedFixTime='$newexpectedFixTime' WHERE ID = '$ProductID'";
   $conn->query($sql);
 
@@ -204,14 +206,15 @@ if (isset($_POST['addProduct'])) {
     return;
   }
   if ($quantity <= 0) {
-    echo "<script>alert('quantity lo hokit');</script>";
+    echo "<script>alert('quantity is Illegal');</script>";
   }
+
   $sql = "SELECT * FROM turnproducts WHERE RequestID='$RequestID' AND ProductID='$ProductID'";
   $result = $conn->query($sql);
   $numofcloumns = $result->num_rows;
-  //explain:if this product exist in the table just update the quantity don't insert new product
+  // 2) if this product exist in his request just update the quantity don't insert new product
   if ($numofcloumns > 0) {
-    //explain:update quantity in products table
+    //update quantity in products table
     $sql = "SELECT * FROM products WHERE ID='$ProductID'";
     $Search = mysqli_query($conn, $sql);
     while ($row = mysqli_fetch_array($Search)) {
@@ -219,17 +222,18 @@ if (isset($_POST['addProduct'])) {
       $productName = $row['name'];
     }
     $newquantity = $oldquantity - $quantity;
-    //explain : if the quantity you typed exist in the mlai
+    //if the quantity you typed exist in the stock
     if ($quantity <= $oldquantity and $quantity > 0) {
       $sql = "UPDATE products SET quantity='$newquantity' WHERE ID='$ProductID' ";
       $conn->query($sql);
-      //explain:update quantity in turnproducts table
+      //update quantity in turnproducts table
       $sql = "SELECT * FROM turnproducts WHERE RequestID='$RequestID' AND ProductID='$ProductID'";
       $Search = mysqli_query($conn, $sql);
       while ($row = mysqli_fetch_array($Search)) {
         $oldproductturnquantity = $row['quantity'];
       }
       $newturnproductquantity = $oldproductturnquantity + $quantity;
+      // update the quantity in the request.
       $sql = "UPDATE turnproducts SET quantity='$newturnproductquantity' WHERE RequestID='$RequestID' AND ProductID='$ProductID'";
       if ($conn->query($sql) === TRUE) {
         echo "
@@ -237,13 +241,14 @@ if (isset($_POST['addProduct'])) {
         ";
         header("refresh:0");
       }
-    } else {
+    } 
+    else {
       echo "
       <script type='text/javascript'>alert('quantity not avaible ');</script>
       ";
     }
   } else {
-    //explain:if the product not exist in his request :insert the product
+    //if the product not exist in his request :insert the product
     $sql = "SELECT * FROM products WHERE ID='$ProductID'";
     $Search = mysqli_query($conn, $sql);
     while ($row = mysqli_fetch_array($Search)) {
@@ -275,8 +280,10 @@ if (isset($_POST['addProduct'])) {
   }
 }
 if (isset($_POST['closeturn'])) {
+  // 1)update the rquest to close . 
   $sql = "UPDATE requests SET status='done' WHERE ID='$RequestID'";
   if ($conn->query($sql) === TRUE) {
+    // 2) make recept to the client . 
     $WID = $_SESSION['id'];
     $ToltalAllPrices = 0;
     $Search = mysqli_query($conn, "SELECT* FROM turnproducts WHERE RequestID='$RequestID'");
@@ -310,14 +317,14 @@ if (isset($_POST['closeturn'])) {
     }
     echo "<script type='text/javascript'>alert('the turn closed');</script>";
 
+
     $sql = "SELECT ProblemID FROM requests WHERE ID='$RequestID'";
     $result = $conn->query($sql);
     $row = $result->fetch_assoc();
     $ProblemID = $row['ProblemID'];
-
     $sql2 = "SELECT * FROM turnproblems WHERE ProblemID='$ProblemID'";
     $result2 = $conn->query($sql2);
-    // if the products for the problem not exist (new problem)
+    // if the products for the problem not exist (new problem).
     if ($result2->num_rows <= 0) {
       $sql3 = "SELECT *  FROM turnproducts WHERE RequestID = '$RequestID'";
       $result3 = $conn->query($sql3);
@@ -370,7 +377,7 @@ if (isset($_POST['deleteProduct'])) {
       }
       echo "<script>alert('the product deleted');</script>";
     } else {
-      //ُexplain:update product quantity=quantity+$deleteQuantity
+      //ُupdate product quantity=quantity+$deleteQuantity
       $newProductQuantity = $oldProductQuantity + $deleteQuantity;
       $sql = "UPDATE products SET quantity='$newProductQuantity' WHERE ID='$deleteProductID'";
       if ($conn->query($sql) === TRUE) {
@@ -378,7 +385,7 @@ if (isset($_POST['deleteProduct'])) {
         echo "error";
       }
       $newTurnProductQuantity = $oldTurnProductQuantity - $deleteQuantity;
-      //explain:update turn product quantity=quantity=$deleteQuantity
+      //update turn product quantity=quantity=$deleteQuantity
       $sql = "UPDATE turnproducts SET quantity='$newTurnProductQuantity' WHERE RequestID='$RequestID' AND ProductID='$deleteProductID'";
       if ($conn->query($sql) === TRUE) {
         echo "

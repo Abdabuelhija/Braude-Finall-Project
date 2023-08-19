@@ -30,7 +30,6 @@ session_start();
 </html>
 
 <?php
-
 if (isset($_POST['submit'])) {
     if (isAlreadyHaveTurn() == false) {
         // check if today is not Saturday (6 is the number for Saturday in PHP's date function)
@@ -39,7 +38,7 @@ if (isset($_POST['submit'])) {
             $description = $_POST["subject"];
             findProblem($description);
         } else {
-            echo "The store is closed,try again later .";
+            echo "<div class='message-output'><p class='result-msg__text'>The store is closed,try again later </p></div>";
         }
     } else {
         echo "<script>alert('You already sent a request');</script>";
@@ -89,7 +88,7 @@ function findProblem($description)
             $similarId = $row['ID'];
         }
     }
-        // 3) 
+        // 3) get the data of the products that match the problem .
     if ($maxSimilarity > 80.0 && $suggestedDescription !== $description) {
         echo "<center><h6 style='color:orange'>Did you mean: '" . $suggestedDescription . "'?</h6></center>";
         // Retrieve the similar problem's details from the database
@@ -118,7 +117,7 @@ function findProblem($description)
         return; // Exit the function
     }
 
-    // Insert the new problem into the database if it doesn't already exist
+    //  4) Insert the new problem into the database if it doesn't already exist
     $sql = "INSERT INTO problems (description, carType) SELECT '$description', '$carType' FROM DUAL WHERE NOT EXISTS (SELECT * FROM problems WHERE description = '$description' AND carType = '$carType')";
     if ($conn->query($sql) === false) {
         echo '<center>', '<h6 style="color:red">', "Error: " . $sql . "<br>" . $conn->error;
@@ -134,7 +133,7 @@ function findProblem($description)
         $ProblemID = $row['ID'];
     }
 
-    // Show the details for the new problem
+    // 5) Show the details for the new problem
     $sql = "SELECT p.price, p.expectedFixTime, tp.quantity, prob.ID as ProblemID FROM problems prob
                 INNER JOIN turnProblems tp ON prob.ID = tp.ProblemID
                 INNER JOIN products p ON tp.ProductID = p.ID
@@ -160,14 +159,13 @@ function findProblem($description)
 }
 
 
-
-
 function findWorker($TotalProcessTime, $ProblemID)
 {
     include "../../db_connection.php";
     $carType = $_SESSION['carType'];
     $description = $_POST["subject"];
     $CID = $_SESSION['id'];
+    // 1) get the worker data from shift and workers table , that now his turn is 0 .
     $sql = "SELECT s.WorkerID, w.firstname, w.lastname FROM shift s JOIN workers w ON s.WorkerID = w.ID WHERE s.Histurn = 0 AND s.Date = CURDATE() AND w.competence = '$carType' LIMIT 1";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
@@ -175,9 +173,11 @@ function findWorker($TotalProcessTime, $ProblemID)
         $workerID = $row['WorkerID'];
         $worker_Fname=$row['firstname'];
         $worker_Lname=$row['lastname'];
+        // 2) get the data of the last request for the worker . 
         $sql2 = "SELECT * FROM requests WHERE date = CURDATE() AND status = 'Processing' AND workerID= '$workerID'";
         $result2 = $conn->query($sql2);
         $row2 = $result2->fetch_assoc();
+        // if there are request in possessing to the worker .
         if ($result2->num_rows > 0) {
             $finishTime = strtotime($row2['finishTime']);
             $newFinishTime = $finishTime + $TotalProcessTime;
@@ -187,12 +187,13 @@ function findWorker($TotalProcessTime, $ProblemID)
 
             echo "<div class='timestamp'>";
             echo "<p>The worker will start processing your request at <span class='highlight'>$newstartTimeFormatted</span> and finish at <span class='highlight'>$newFinishTimeFormatted</span></p>";
-
+            
             $sql3 = "INSERT INTO requests (clientID, workerID, status, description, Date, finishTime, startTime, ProblemID) 
                 VALUES ('$CID', '$workerID', 'Processing', '$description', CURDATE(), '$newFinishTimeFormatted', '$newstartTimeFormatted', '$ProblemID')";
             $conn->query($sql3);
             $sql4 = "UPDATE shift SET Histurn = 1 WHERE WorkerID = '$workerID' AND Date = CURDATE()";
             $conn->query($sql4);
+            // check if all the workers get requests (if all of the 1 ) so reset the row . 
             $sql5 = "SELECT COUNT(*) as count 
                 FROM shift 
                 INNER JOIN workers ON shift.WorkerID = workers.ID
@@ -210,6 +211,7 @@ function findWorker($TotalProcessTime, $ProblemID)
             echo "<p>Your request is being processed by worker <span class='highlight'>$worker_Fname $worker_Lname</span>.</p>";
             echo "</div>";
         } 
+        // if there are no  requests in possessing to the worker .
         else {
             $now = strtotime(date("H:i:s"));
             $newFinishTime = $now + $TotalProcessTime;
@@ -225,6 +227,7 @@ function findWorker($TotalProcessTime, $ProblemID)
             $conn->query($sql3);
             $sql4 = "UPDATE shift SET Histurn = 1 WHERE WorkerID = '$workerID' AND Date = CURDATE()";
             $conn->query($sql4);
+                        // check if all the workers get requests (if all of the 1 ) so reset the row . 
             $sql5 = "SELECT COUNT(*) as count 
                 FROM shift 
                 INNER JOIN workers ON shift.WorkerID = workers.ID
